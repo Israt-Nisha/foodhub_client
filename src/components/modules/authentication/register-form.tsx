@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { env } from "@/env";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
@@ -47,7 +48,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleGoogleLogin = async () => {
     const data = authClient.signIn.social({
       provider: "google",
-      callbackURL: process.env.NEXT_PUBLIC_FRONTEND_URL!,
+      callbackURL: env.NEXT_PUBLIC_FRONTEND_URL!,
     });
 
     console.log(data)

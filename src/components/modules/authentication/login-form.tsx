@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { env } from "@/env";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
@@ -28,7 +29,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleGoogleLogin = async () => {
     const data = authClient.signIn.social({
       provider: "google",
-      callbackURL: process.env.NEXT_PUBLIC_FRONTEND_URL!,
+      callbackURL: env.NEXT_PUBLIC_FRONTEND_URL!,
     });
   };
 
