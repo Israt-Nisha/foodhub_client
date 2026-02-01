@@ -23,18 +23,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { User } from "@/types";
 
-interface User {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  email: string;
-  emailVerified: boolean;
-  name: string;
-  image?: string | null;
-  role: "CUSTOMER" | "PROVIDER" | "ADMIN";
-  status: "ACTIVE" | "SUSPENDED";
-}
+
 
 interface NavItem {
   name: string;
