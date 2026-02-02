@@ -82,7 +82,6 @@ const CategorySection = async () => {
           );
         })}
       </div>
-
      
     </div>
   );

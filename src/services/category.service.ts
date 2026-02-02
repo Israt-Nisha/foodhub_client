@@ -24,4 +24,23 @@ export const categoryService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
+
+
+    getCategoryById: async (id: string) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/categories/${id}`, {
+        cache: "no-store",
+        credentials: "include",
+      });
+      const data = await res.json();
+      return data.success
+        ? { data: data.data, error: null }
+        : { data: null, error: data.message };
+    } catch {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+
+
+
 }

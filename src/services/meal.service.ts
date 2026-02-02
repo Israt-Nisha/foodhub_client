@@ -10,5 +10,13 @@ export const mealService = {
     });
     return res.json();
   },
+  
+  getMealById: async (id: string) => {
+    const res = await fetch(`${BACKEND_URL}/api/meals/${id}`, {
+      cache: "no-store",
+      credentials: "include",
+    });
+    return res.json();
+  },
 
 }
