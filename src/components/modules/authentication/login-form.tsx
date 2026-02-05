@@ -26,12 +26,12 @@ const formSchema = z.object({
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
 
-  const handleGoogleLogin = async () => {
-    const data = authClient.signIn.social({
-      provider: "google",
-      callbackURL: env.NEXT_PUBLIC_FRONTEND_URL!,
-    });
-  };
+  // const handleGoogleLogin = async () => {
+  //   const data = authClient.signIn.social({
+  //     provider: "google",
+  //     callbackURL: env.NEXT_PUBLIC_FRONTEND_URL!,
+  //   });
+  // };
 
   const form = useForm({
     defaultValues: {
@@ -137,14 +137,14 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         >
           Login
         </Button>
-        <Button
+        {/* <Button
           onClick={handleGoogleLogin}
           variant="outline"
           type="button"
           className="w-full cursor-pointer"
         >
           Continue with Google
-        </Button>
+        </Button> */}
       </CardFooter>
     </Card>
   );

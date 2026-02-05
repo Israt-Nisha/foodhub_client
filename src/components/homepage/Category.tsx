@@ -1,10 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { CategoryData, categoryService } from "@/services/category.service";
-import { mealService } from "@/services/meal.service";
-import { MealData } from "@/types";
-import Link from "next/link";
-import { Utensils, Coffee, Flame, IceCream, PizzaIcon } from "lucide-react";
-
+import { categoryService, CategoryData } from "@/services/category.service";
+import { Utensils } from "lucide-react";
 
 // Gradient color palette
 const colors = [
@@ -15,75 +10,53 @@ const colors = [
   "bg-purple-200 text-purple-700",
 ];
 
-interface CategoryWithCount extends CategoryData {
-  mealCount: number;
-}
-
 const CategorySection = async () => {
-  
-  const { data: categories, error: catError } = await categoryService.getAllCategories();
-  if (catError || !categories || categories.length === 0) {
-    return <p className="text-center text-gray-500">No categories found.</p>;
+  const { data: categories, error } =
+    await categoryService.getAllCategories();
+
+  if (error || !categories || categories.length === 0) {
+    return (
+      <p className="text-center text-gray-500">
+        No categories found.
+      </p>
+    );
   }
 
+  const visibleCategories = (categories as CategoryData[]).slice(0, 6);
 
-  const { data: meals, error: mealError } = await mealService.getAllMeals();
-  if (mealError || !meals) {
-    return <p className="text-center text-gray-500">No meals found.</p>;
-  }
+   return (
+    <>
+      <h2 className="text-4xl font-bold text-center py-12">
+        Popular Categories
+      </h2>
 
-  
-  const categoryMealCount: Record<string, number> = {};
-  (meals as MealData[]).forEach((meal: MealData) => {
-    if (meal.categoryId) {
-      categoryMealCount[meal.categoryId] =
-        (categoryMealCount[meal.categoryId] || 0) + 1;
-    }
-  });
+      <div className="max-w-7xl mx-auto px-4 pb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-12">
+          {visibleCategories.map((cat, idx) => {
+            const color = colors[idx % colors.length];
 
- 
-  const sortedCategories: CategoryWithCount[] = (categories as CategoryData[])
-    .map((cat: CategoryData) => ({
-      ...cat,
-      mealCount: categoryMealCount[cat.id!] || 0,
-    }))
-    .sort((a, b) => b.mealCount - a.mealCount)
-    .slice(0, 12);
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      
-
-      <div className="flex flex-wrap gap-6 md:gap-10 space-y-2 justify-center items-center text-center">
-        {sortedCategories.map((cat: CategoryWithCount, idx: number) => {
-          const Icon =  Utensils;
-          const color = colors[idx % colors.length];
-
-          return (
-            <div
-              key={cat.id}
-              className="flex flex-col items-center hover:-translate-y-1 transition-transform duration-300"
-            >
-              
+            return (
               <div
-                className={`mb-3 flex h-14 w-14 items-center justify-center rounded-full ${color} shadow-lg`}
+                key={cat.id}
+                className="flex justify-center hover:-translate-y-1 transition-transform duration-300"
               >
-                <Icon className="h-6 w-6" />
+                <div
+                  className={`flex flex-col items-center rounded-xl justify-center 
+                  px-8 sm:px-10 lg:px-12
+                  py-10 sm:py-12 lg:py-14
+                  ${color} shadow-lg`}
+                >
+                  <Utensils className="h-8 w-8 md:h-14 md:w-14" />
+                  <h3 className="text-xl font-semibold mt-6 text-gray-800 text-center">
+                    {cat.name}
+                  </h3>
+                </div>
               </div>
-
-              <h3 className={`text-lg font-semibold hover:text-${color} text-center text-gray-800`}>
-                {cat.name}
-              </h3>
-
-              <p className="text-sm text-gray-500 text-center">
-                {cat.mealCount} meal{cat.mealCount !== 1 ? "s" : ""}
-              </p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-     
-    </div>
+    </>
   );
 };
 

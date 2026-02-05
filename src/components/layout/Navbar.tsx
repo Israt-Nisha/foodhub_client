@@ -64,8 +64,6 @@ export const Navbar = () => {
     { name: "Home", href: "/" },
     { name: "Meals", href: "/meals" },
     { name: "Providers", href: "/providers" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
   ];
 
   const dashboardLink: NavItem | null = userInfo
