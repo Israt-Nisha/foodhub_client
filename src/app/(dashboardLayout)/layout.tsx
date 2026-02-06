@@ -18,14 +18,14 @@ import { userService } from "@/services/user.service";
 import { ReactNode } from "react";
 
 export default async function DashboardLayout({
- admin,
+  admin,
   customer,
   provider,
 
 }: {
-    admin: ReactNode;
-    customer: ReactNode;
-    provider: ReactNode;
+  admin: ReactNode;
+  customer: ReactNode;
+  provider: ReactNode;
 }) {
 
   const { data } = await userService.getSession();
@@ -40,11 +40,11 @@ export default async function DashboardLayout({
           <SidebarTrigger className="-ml-1" />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-           {userInfo.role === Roles.admin
-  ? "Admin"
-  : userInfo.role === Roles.provider
-  ? "Provider"
-  : "Customer"}
+          {userInfo.role === Roles.admin
+            ? "Admin"
+            : userInfo.role === Roles.provider
+              ? "Provider"
+              : "Customer"}
         </div>
       </SidebarInset>
     </SidebarProvider>
