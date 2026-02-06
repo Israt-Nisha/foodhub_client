@@ -1,44 +1,63 @@
+// src/proxy.ts
+import { userService } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
-import { userService } from "./services/user.service";
-
-
-const DASHBOARD_MAP = {
-  ADMIN: "/dashboard/admin",
-  CUSTOMER: "/dashboard/customer",
-  PROVIDER: "/dashboard/provider",
-} as const;
-
-type Role = keyof typeof DASHBOARD_MAP;
+import { Roles } from "@/constants/roles";
 
 export async function proxy(request: NextRequest) {
-  try {
-    const pathname = request.nextUrl.pathname;
+  const pathname = request.nextUrl.pathname;
+
+  const { data } = await userService.getSession();
+  const user = data?.user;
 
   
-   const { data: session } = await userService.getSession();
-
-    if (!session?.user) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    const role = session.user.role as Role;
-    const dashboardPath = DASHBOARD_MAP[role];
-
-    if (pathname === "/dashboard" || pathname === "/dashboard/") {
-      return NextResponse.redirect(new URL(dashboardPath, request.url));
-    }
-
-    if (!pathname.startsWith(dashboardPath)) {
-      return NextResponse.redirect(new URL(dashboardPath, request.url));
-    }
-
-    return NextResponse.next();
-  } catch (error) {
-    console.log("Proxy auth error:", error);
+  if (!user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+
+
+  if (pathname === "/dashboard") {
+    switch (user.role) {
+      case Roles.admin:
+        return NextResponse.redirect(new URL("/dashboard-admin", request.url));
+      case Roles.provider:
+        return NextResponse.redirect(new URL("/dashboard-provider", request.url));
+      case Roles.customer:
+        return NextResponse.redirect(new URL("/dashboard-customer", request.url));
+      default:
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  if (user.role === Roles.admin) {
+    if (pathname.startsWith("/dashboard-provider") || pathname.startsWith("/dashboard-customer")) {
+      return NextResponse.redirect(new URL("/dashboard-admin", request.url));
+    }
+  }
+
+  if (user.role === Roles.provider) {
+    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-customer")) {
+      return NextResponse.redirect(new URL("/dashboard-provider", request.url));
+    }
+  }
+
+  if (user.role === Roles.customer) {
+    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-provider")) {
+      return NextResponse.redirect(new URL("/dashboard-customer", request.url));
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: [
+    "/dashboard",
+    "/dashboard/:path*",
+    "/dashboard-admin",
+    "/dashboard-admin/:path*",
+    "/dashboard-provider",
+    "/dashboard-provider/:path*",
+    "/dashboard-customer",
+    "/dashboard-customer/:path*",
+  ],
 };

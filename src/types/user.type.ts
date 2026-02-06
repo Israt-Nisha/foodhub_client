@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   createdAt: Date;
@@ -9,3 +10,4 @@ export interface User {
   role: "CUSTOMER" | "PROVIDER" | "ADMIN";
   status: "ACTIVE" | "SUSPENDED";
 }
+

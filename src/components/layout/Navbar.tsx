@@ -71,10 +71,10 @@ export const Navbar = () => {
         name: "Dashboard",
         href:
           userInfo.role === "ADMIN"
-            ? "/dashboard/admin"
+            ? "/dashboard-admin"
             : userInfo.role === "PROVIDER"
-            ? "/dashboard/provider"
-            : "/dashboard/customer",
+            ? "/dashboard-provider"
+            : "/dashboard-customer",
       }
     : null;
 
