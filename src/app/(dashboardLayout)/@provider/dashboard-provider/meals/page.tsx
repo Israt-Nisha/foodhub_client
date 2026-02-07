@@ -1,3 +1,5 @@
+
+import ManageMeals from "@/components/providerDashboard/manageMealsPage/ManageMeals";
 import { Roles } from "@/constants/roles";
 import { userService } from "@/services/user.service";
 
@@ -11,8 +13,8 @@ const ManageMealPage = async () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h1 className="text-2xl font-bold mb-6">Manage Meals</h1>
-     
+      
+      <ManageMeals userId={user.id} />
     </div>
   );
 };
