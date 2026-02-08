@@ -13,8 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createMeal, updateMeal } from "@/action/meal.action";
-import { getAllCategories } from "@/action/category.action";
+
 
 // Enums
 const cuisines = ["BENGALI","INDIAN","CHINESE","ITALIAN","THAI"] as const;
@@ -45,16 +44,9 @@ export default function MealForm({ userId, meal, onSaved, onCancel }: Props) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // // Fetch categories
-  // useEffect(() => {
-  //   categoryService.getAllCategories().then(res => {
-  //     if (!res.error) setCategories(res.data);
-  //   });
-  // }, []);
-
    useEffect(() => {
     (async () => {
-      const { data, error } = await getAllCategories();
+      const { data, error } = await categoryService.getAllCategories();
       if(!error) setCategories(data);
     })();
   }, []);
@@ -92,10 +84,13 @@ export default function MealForm({ userId, meal, onSaved, onCancel }: Props) {
 
       // Build payload
       const payload: MealCreateInput = { ...values, userId, imageUrl };
+      console.log("payload:", payload);
 
       const result = meal
-        ? await updateMeal(meal.id!, payload)
-        : await createMeal(payload);
+        ? await mealService.updateMeal(meal.id!, payload)
+        : await mealService.createMeal(payload);
+      
+      console.log("result:", result);
 
       if (result.error) throw new Error(result.error.message);
 
@@ -109,7 +104,7 @@ export default function MealForm({ userId, meal, onSaved, onCancel }: Props) {
   };
 
   return (
-    <Card>
+    <Card className="mb-8">
       <CardHeader>
         <CardTitle>{meal ? "Edit Meal" : "Create Meal"}</CardTitle>
       </CardHeader>

@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { MealCreateInput, MealData, MealUpdateInput } from "@/types";
 
-const BACKEND_URL = env.BACKEND_URL;
+const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
 
 export const mealService = {
   getAllMeals: async () => {
@@ -24,7 +24,7 @@ export const mealService = {
         };
       }
 
-      return { data: data.data, pagination: data.pagination, error: null };
+      return { data: data, pagination: data.pagination, error: null };
 
     } catch (error) {
       return { data: null, error: { message: "Something Went Wrong" } };
@@ -76,7 +76,7 @@ export const mealService = {
         };
       }
 
-      return { data: data.data, error: null };
+      return { data: data, error: null };
 
     } catch (error) {
       return { data: null, error: { message: "Something Went Wrong" } };
@@ -100,7 +100,7 @@ export const mealService = {
         };
       }
 
-      return { data: data.data, error: null };
+      return { data: data, error: null };
 
     } catch (error) {
       return { data: null, error: { message: "Something Went Wrong" } };

@@ -8,7 +8,7 @@ export interface CategoryData {
   imageUrl? : string;
 }
 
-const BACKEND_URL = env.BACKEND_URL;
+const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
 
 export const categoryService = {
 getAllCategories: async () => {
