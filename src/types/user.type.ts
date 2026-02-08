@@ -1,3 +1,4 @@
+export type UserStatus = "ACTIVE" | "SUSPENDED";
 
 export interface User {
   id: string;
@@ -8,6 +9,16 @@ export interface User {
   name: string;
   image?: string | null;
   role: "CUSTOMER" | "PROVIDER" | "ADMIN";
-  status: "ACTIVE" | "SUSPENDED";
+  status: UserStatus;
 }
+
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+  status: UserStatus;
+  image?: string;
+}
+
 
