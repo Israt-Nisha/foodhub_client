@@ -1,6 +1,7 @@
 "use client";
 
 import { MealData } from "@/types";
+import Image from "next/image";
 
 
 type MealsGridProps = {
@@ -23,6 +24,16 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
           key={meal.id}
           className="border rounded-lg p-4 hover:shadow-md transition"
         >
+           {meal.imageUrl && (
+            <div className="relative w-full h-40 mb-3">
+              <Image
+                src={meal.imageUrl}
+                alt={meal.name}
+                fill
+                className="object-cover rounded-md"
+              />
+            </div>
+          )}
           <h3 className="text-lg font-semibold">
             {meal.name}
           </h3>
