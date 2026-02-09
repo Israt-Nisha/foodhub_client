@@ -15,8 +15,7 @@ interface Props {
 const MealsManage = ({ userId }: Props) => {
     const [meals, setMeals] = useState<MealData[]>([]);
     const [loading, setLoading] = useState(false);
-    const [showForm, setShowForm] = useState(false);
-
+    
     const [selectedMeal, setSelectedMeal] = useState<MealData | null>(null);
     const [openForm, setOpenForm] = useState(false);
 

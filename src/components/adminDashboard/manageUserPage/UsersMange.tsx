@@ -7,32 +7,31 @@ import { Button } from "@/components/ui/button";
 import { UserData, UserStatus } from "@/types";
 import { adminService } from "@/services/adminUser.service";
 
-interface Props {
-    userId: string;
-}
-const ManageUsers = ({ userId }: Props) => {
+
+const ManageUsers = () => {
     const [users, setUsers] = useState<UserData[]>([]);
     const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [editingUserId, setEditingUserId] = useState<string | null>(null);
     const [status, setStatus] = useState<UserStatus>("ACTIVE");
 
     /* ---------------- Fetch users ---------------- */
-  const fetchUsers = async () => {
-  setLoading(true);
+    const fetchUsers = async () => {
+        setLoading(true);
 
-  const res = await adminService.getAllUsers();
-  console.log("API response:", res);
+        const res = await adminService.getAllUsers();
+        console.log("API response:", res);
 
-  if (!res?.error) {
-    // Use the inner `data` array
-    const usersArray = Array.isArray(res.data?.data) ? res.data.data : [];
-    setUsers(usersArray);
-  } else {
-    toast.error(res.error.message);
-  }
+        if (!res?.error) {
+            // Use the inner `data` array
+            const usersArray = Array.isArray(res.data?.data) ? res.data.data : [];
+            setUsers(usersArray);
+        } else {
+            toast.error(res.error.message);
+        }
 
-  setLoading(false);
-};
+        setLoading(false);
+    };
 
     useEffect(() => {
         fetchUsers();
@@ -76,6 +75,8 @@ const ManageUsers = ({ userId }: Props) => {
 
                             <p className="text-sm text-gray-600">{user.email}</p>
 
+                            <p className="text-md font-bold">Role: {user.role}</p>
+
                             {editingUserId === user.id ? (
                                 <select
                                     value={status}
@@ -101,9 +102,13 @@ const ManageUsers = ({ userId }: Props) => {
                                         <>
                                             <Button
                                                 size="sm"
+                                                disabled={saving}
                                                 onClick={async () => {
-                                                    if (!user.id) return; // safety check
+                                                    if (!user.id) return;
+
+                                                    setSaving(true);
                                                     const res = await adminService.updateUser(user.id, status);
+                                                    setSaving(false);
 
                                                     if (res.error) {
                                                         toast.error(res.error.message);
@@ -115,7 +120,7 @@ const ManageUsers = ({ userId }: Props) => {
                                                     fetchUsers();
                                                 }}
                                             >
-                                                Save
+                                                {saving ? "Saving..." : "Save"}
                                             </Button>
 
                                             <Button

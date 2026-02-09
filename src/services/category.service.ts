@@ -8,6 +8,13 @@ export interface CategoryData {
   imageUrl? : string;
 }
 
+export type CategoryWithCount = CategoryData & {
+  _count?: {
+    meals: number;
+  };
+};
+
+
 const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
 
 export const categoryService = {

@@ -8,6 +8,10 @@ export const adminRoutes: Route[] = [
         title: "Manage-Users",
         url: "/dashboard-admin/users",
       },
+      {
+        title: "Manage-Categories",
+        url: "/dashboard-admin/categories",
+      },
     ],
   },
 ];
