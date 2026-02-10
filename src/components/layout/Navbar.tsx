@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { User } from "@/types";
+import { cartService } from "@/services/cart.service";
 
 
 
@@ -36,13 +37,55 @@ export const Navbar = () => {
   const { data: session } = authClient.useSession();
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
 
-  useEffect(() => {
-    if (session) setUserInfo(session.user as User);
-    else setUserInfo(null);
-  }, [session]);
+ const fetchCartCount = async () => {
+  if (!userInfo || userInfo.role !== "CUSTOMER") {
+    setCartCount(0);
+    return;
+  }
+
+  try {
+    const res = await cartService.getCartItems();
+    console.log("Cart API response:", res); // for debugging
+
+    const items = res.data || [];
+    const totalQty = items.reduce((sum: number, item: any) => sum + item.quantity, 0);
+
+    setCartCount(totalQty);
+    console.log("Cart count:", totalQty);
+  } catch (error) {
+    console.error("Failed to fetch cart count", error);
+  }
+};
+
+
+
+useEffect(() => {
+  if (session) {
+    setUserInfo(session.user as User);
+  } else {
+    setUserInfo(null);
+    setCartCount(0);
+  }
+}, [session]);
+
+
+useEffect(() => {
+  if (!userInfo || userInfo.role !== "CUSTOMER") return;
+
+  fetchCartCount();
+
+  const handleCartUpdate = () => fetchCartCount();
+  window.addEventListener("cartUpdated", handleCartUpdate);
+
+  return () => {
+    window.removeEventListener("cartUpdated", handleCartUpdate);
+  };
+}, [userInfo]);
+
 
   const handleSignOut = async () => {
     const toastId = toast.loading("Logging out...");
@@ -68,14 +111,14 @@ export const Navbar = () => {
 
   const dashboardLink: NavItem | null = userInfo
     ? {
-        name: "Dashboard",
-        href:
-          userInfo.role === "ADMIN"
-            ? "/dashboard-admin"
-            : userInfo.role === "PROVIDER"
+      name: "Dashboard",
+      href:
+        userInfo.role === "ADMIN"
+          ? "/dashboard-admin"
+          : userInfo.role === "PROVIDER"
             ? "/dashboard-provider"
             : "/dashboard-customer",
-      }
+    }
     : null;
 
   const navItems: NavItem[] = dashboardLink ? [...baseNavItems, dashboardLink] : baseNavItems;
@@ -100,24 +143,40 @@ export const Navbar = () => {
           </div>
 
           <div className="flex gap-2">
-            {userInfo ? (
-              <Button
-                variant="default"
-                onClick={handleSignOut}
-                disabled={loading}
-              >
-                {loading ? "Loging Out..." : "LogOut"}
-              </Button>
-            ) : (
-              <>
-                <Button asChild variant="outline" size="sm">
-                  <Link href="/login">Login</Link>
-                </Button>
-                <Button asChild size="sm">
-                  <Link href="/register">Register</Link>
-                </Button>
-              </>
-            )}
+            <div className="flex gap-2 items-center">
+              {userInfo ? (
+                <>
+                  {userInfo.role === "CUSTOMER" && (
+                    <Link href="/cart" className="relative mr-6">
+                      <ShoppingCart className="w-5 h-5" />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-black text-white text-xs flex items-center justify-center">
+                          {cartCount}
+                        </span>
+                      )}
+                    </Link>
+                  )}
+
+                  <Button
+                    variant="default"
+                    onClick={handleSignOut}
+                    disabled={loading}
+                  >
+                    {loading ? "Logging Out..." : "LogOut"}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild variant="outline">
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/register">Register</Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
           </div>
         </nav>
 
@@ -149,15 +208,28 @@ export const Navbar = () => {
                     {navItems.map((item) => renderMobileMenuItem(item, pathname))}
                   </Accordion>
 
-                  <div className="flex flex-col gap-3 mt-4">
+                  <div className="flex flex-col gap-4 mt-4">
                     {userInfo ? (
-                      <Button
-                        variant="default"
-                        onClick={handleSignOut}
-                        disabled={loading}
-                      >
-                        {loading ? "Loging Out..." : "LogOut"}
-                      </Button>
+                      <>
+                        {userInfo.role === "CUSTOMER" && (
+                          <Link href="/cart" className="relative">
+                            <ShoppingCart className="w-5 h-5" />
+                            {cartCount > 0 && (
+                              <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-black text-white text-xs flex items-center justify-center">
+                                {cartCount}
+                              </span>
+                            )}
+                          </Link>
+                        )}
+
+                        <Button
+                          variant="default"
+                          onClick={handleSignOut}
+                          disabled={loading}
+                        >
+                          {loading ? "Logging Out..." : "LogOut"}
+                        </Button>
+                      </>
                     ) : (
                       <>
                         <Button asChild variant="outline">
