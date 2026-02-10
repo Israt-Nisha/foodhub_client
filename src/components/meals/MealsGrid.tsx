@@ -9,7 +9,7 @@ type MealsGridProps = {
 };
 
 const MealsGrid = ({ meals }: MealsGridProps) => {
-  if (!meals.length) {
+  if (!meals || meals.length === 0) {
     return (
       <p className="text-center text-gray-500 py-10">
         Meals not found
@@ -43,7 +43,7 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
           </p>
 
           <p className="mt-2 font-bold text-primary">
-            ৳ {meal.price}
+            Price: {meal.price}
           </p>
 
           <p className="text-xs text-gray-400 mt-1">

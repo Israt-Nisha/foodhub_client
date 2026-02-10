@@ -6,7 +6,7 @@ const Meals = async () => {
   const {data} = await mealService.getAllMeals();
 
   return (
-    <div className="container mx-auto px-4 space-y-10 pb-10">
+    <div className="container mx-auto px-4 space-y-10 py-10">
       
       <MealsGrid meals={data.data ?? []} />
     </div>
