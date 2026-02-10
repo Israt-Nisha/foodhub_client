@@ -1,4 +1,4 @@
-// app/providers/[id]/page.tsx
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { providerService } from "@/services/provider.service";

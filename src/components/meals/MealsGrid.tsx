@@ -2,6 +2,7 @@
 
 import { MealData } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 
 
 type MealsGridProps = {
@@ -20,9 +21,10 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {meals.map((meal) => (
-        <div
+       <Link
           key={meal.id}
-          className="border rounded-lg p-4 hover:shadow-md transition"
+          href={`/meals/${meal.id}`}
+          className="border rounded-lg p-4 hover:shadow-md transition block"
         >
            {meal.imageUrl && (
             <div className="relative w-full h-40 mb-3">
@@ -51,7 +53,7 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
           </p>
 
           {/* Future: Add to cart button */}
-        </div>
+        </Link>
       ))}
     </div>
   );
