@@ -46,9 +46,9 @@ export const adminService = {
     }
   },
 
-  updateUser: async (id: string, status:UserStatus) => {
+  updateUserStatus: async (id: string, status:UserStatus) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/admin/users/${id}`, {
+      const res = await fetch(`${BACKEND_URL}/api/admin/users/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({status}),
@@ -57,6 +57,29 @@ export const adminService = {
       const data = await res.json();
       return data.success
         ? { data: data.data, error: null }
+        : {
+            data: null,
+            error: { message: data.message || "Failed to update user" },
+          };
+    } catch (err: any) {
+      return {
+        data: null,
+        error: { message: err?.message || "Something went wrong" },
+      };
+    }
+  },
+
+   updateUser: async (id: string, payload: Partial<UserData>) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/users/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include",
+      });
+      const data = await res.json();
+      return data.success
+        ? { data: data.data as UserData, error: null }
         : {
             data: null,
             error: { message: data.message || "Failed to update user" },

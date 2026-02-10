@@ -9,10 +9,10 @@ import MealForm from "./MealForm";
 import { mealService } from "@/services/meal.service";
 
 interface Props {
-    userId: string;
+    providerId: string;
 }
 
-const MealsManage = ({ userId }: Props) => {
+const MealsManage = ({ providerId }: Props) => {
     const [meals, setMeals] = useState<MealData[]>([]);
     const [loading, setLoading] = useState(false);
     
@@ -32,7 +32,7 @@ const MealsManage = ({ userId }: Props) => {
                     ? res.data.data
                     : [];
 
-            setMeals(mealsArray.filter((m: MealData) => m.userId === userId));
+            setMeals(mealsArray.filter((m: MealData) => m.providerId === providerId));
         } else {
             toast.error("Failed to load meals");
         }
@@ -82,7 +82,7 @@ const MealsManage = ({ userId }: Props) => {
                 </Button>
             </div>
             {openForm && <MealForm
-                userId={userId}
+                userId={providerId}
                 meal={selectedMeal ?? undefined}
                 onSaved={() => {
                     setOpenForm(false);

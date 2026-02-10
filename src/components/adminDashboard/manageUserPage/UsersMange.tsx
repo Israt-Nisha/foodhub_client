@@ -107,7 +107,7 @@ const ManageUsers = () => {
                                                     if (!user.id) return;
 
                                                     setSaving(true);
-                                                    const res = await adminService.updateUser(user.id, status);
+                                                    const res = await adminService.updateUserStatus(user.id, status);
                                                     setSaving(false);
 
                                                     if (res.error) {

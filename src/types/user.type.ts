@@ -22,3 +22,12 @@ export interface UserData {
 }
 
 
+export interface ProviderProfileData {
+  id?: string;
+  userId: string;
+  restaurantName: string;
+  address: string;
+  phone: string;
+  logo?: string;
+}
+
