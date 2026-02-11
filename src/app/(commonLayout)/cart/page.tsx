@@ -1,9 +1,10 @@
+import CartClientPage from '@/components/cart/CartClientPage';
 import React from 'react';
 
 const CartPage = () => {
     return (
         <div>
-            <h1>This is cart Page</h1>
+            <CartClientPage />
         </div>
     );
 };
