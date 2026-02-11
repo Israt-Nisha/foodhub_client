@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { cartService, CartItemPayload } from "@/services/cart.service";
-// import { createOrder } from "@/services/order.service";
+import { cartService } from "@/services/cart.service";
+import { orderService } from "@/services/order.service";
+import { mealService } from "@/services/meal.service";
 import { X } from "lucide-react";
-import { User } from "@/types";
 
 export interface CartItem {
   id: string;
@@ -19,115 +19,101 @@ export interface CartItem {
   providerId?: string;
 }
 
-interface CartClientPageProps {
-  userInfo: User | null;
-}
-
 const CartClientPage = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [address, setAddress] = useState("");
+  const [selectedItemForOrder, setSelectedItemForOrder] = useState<CartItem | null>(null);
+  const [orderAddress, setOrderAddress] = useState("");
   const [placingOrder, setPlacingOrder] = useState(false);
 
-  // Fetch cart items
+
   const fetchCart = async () => {
     const res = await cartService.getCartItems();
-    if (!res.error) {
-      setCartItems(res.data || []);
-    } else {
-      toast.error("Failed to load cart");
-    }
+    if (!res.error) setCartItems(res.data || []);
+    else toast.error("Failed to load cart");
   };
 
   useEffect(() => {
     fetchCart();
   }, []);
 
-  // Update quantity
   const handleQuantityChange = async (id: string, quantity: number) => {
     if (quantity < 1) {
       toast.error("Quantity must be at least 1");
       return;
     }
-
     const res = await cartService.updateCartItem(id, { quantity });
-    if (!res.error && res.data) {
-      toast.success("Quantity updated successfully");
+    if (!res.error) {
+      toast.success("Quantity updated");
       fetchCart();
       window.dispatchEvent(new Event("cartUpdated"));
-    } else {
-      toast.error(res.error?.message || "Failed to update quantity");
-    }
+    } else toast.error(res.error?.message || "Failed to update");
   };
 
-  // Remove item
   const handleRemove = async (id: string) => {
     const res = await cartService.deleteCartItem(id);
     if (!res.error) {
       toast.success("Item removed");
       fetchCart();
       window.dispatchEvent(new Event("cartUpdated"));
-    } else {
-      toast.error("Failed to remove item");
+    } else toast.error("Failed to remove item");
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!selectedItemForOrder) return;
+    if (!orderAddress.trim()) {
+      toast.error("Please enter delivery address");
+      return;
+    }
+
+    setPlacingOrder(true);
+
+    try {
+      
+      const mealRes = await mealService.getMealById(selectedItemForOrder.mealId);
+      const mealData = await mealRes.data;
+
+      if (!mealData.providerId) {
+        toast.error("Provider info missing");
+        return;
+      }
+
+      const payload = {
+        providerId: mealData.providerId,
+        address: orderAddress,
+        totalAmount: selectedItemForOrder.mealPrice * selectedItemForOrder.quantity,
+        items: [
+          { mealId: selectedItemForOrder.mealId, quantity: selectedItemForOrder.quantity, price: selectedItemForOrder.mealPrice, },
+        ],
+      };
+
+      const res = await orderService.createOrder(payload);
+
+      if (res.error) {
+        toast.error(res.error);
+        return;
+      }
+
+      toast.success("Order placed successfully (one item at a time)");
+
+      await cartService.deleteCartItem(selectedItemForOrder.id);
+      fetchCart();
+      window.dispatchEvent(new Event("cartUpdated"));
+      setSelectedItemForOrder(null);
+      setOrderAddress("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to place order");
+    } finally {
+      setPlacingOrder(false);
     }
   };
 
-  // Place order
-  // const handlePlaceOrder = async () => {
-  //   if (!address.trim()) {
-  //     toast.error("Please enter your delivery address");
-  //     return;
-  //   }
-  //   if (!userInfo) {
-  //     toast.error("Please login to place order");
-  //     return;
-  //   }
-  //   if (!cartItems.length) {
-  //     toast.error("Cart is empty");
-  //     return;
-  //   }
-
-  //   const payload = {
-  //     providerId: cartItems[0]?.providerId || "",
-  //     address,
-  //     totalAmount: totalPrice,
-  //     items: cartItems.map((item) => ({
-  //       mealId: item.mealId,
-  //       quantity: item.quantity,
-  //     })),
-  //     paymentMethod: "COD",
-  //   };
-
-  //   try {
-  //     setPlacingOrder(true);
-  //     await createOrder(payload, userInfo.id);
-  //     toast.success("Order placed successfully! Cash on delivery selected.");
-  //     setAddress("");
-  //     fetchCart();
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Failed to place order");
-  //   } finally {
-  //     setPlacingOrder(false);
-  //   }
-  // };
-
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.mealPrice * item.quantity,
-    0
-  );
-
   if (!cartItems.length) {
-    return (
-      <p className="text-center py-10 text-gray-500">
-        Your cart is empty
-      </p>
-    );
+    return <p className="text-center py-10 text-gray-500">Your cart is empty</p>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-10 grid md:grid-cols-3 gap-8">
-      {/* CART ITEMS */}
+    <div className="container mx-auto px-4 py-10 grid md:grid-cols-3 gap-10">
+
       <div className="space-y-6 md:col-span-2">
         {cartItems.map((item) => (
           <div
@@ -149,42 +135,30 @@ const CartClientPage = () => {
               </div>
             )}
 
-            {/* Meal Info & Controls */}
             <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
               <div>
                 <h3 className="font-semibold text-lg">{item.mealName}</h3>
                 <p className="text-sm text-gray-500 mt-1">{item.mealPrice} TK</p>
+                <p className="text-sm text-gray-500 mt-1">Quantity: {item.quantity}</p>
               </div>
 
               <div className="flex items-center gap-2 mt-3 sm:mt-0">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={() =>
-                    handleQuantityChange(item.id, item.quantity - 1)
-                  }
-                >
-                  -
-                </Button>
-
+                <Button size="icon" variant="outline" onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>-</Button>
                 <span className="px-3 py-1 border rounded">{item.quantity}</span>
-
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={() =>
-                    handleQuantityChange(item.id, item.quantity + 1)
-                  }
-                >
-                  +
-                </Button>
-
+                <Button size="icon" variant="outline" onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</Button>
                 <Button
                   size="sm"
                   variant="destructive"
                   onClick={() => handleRemove(item.id)}
                 >
                   <X className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => setSelectedItemForOrder(item)}
+                  disabled={!!selectedItemForOrder && selectedItemForOrder.id !== item.id}
+                >
+                  Order
                 </Button>
               </div>
             </div>
@@ -193,63 +167,46 @@ const CartClientPage = () => {
       </div>
 
       {/* ORDER SUMMARY */}
-      <div className="border rounded-lg p-6 h-fit space-y-6 md:w-full w-full">
-        <h2 className="text-lg font-semibold">Order Summary</h2>
+      {selectedItemForOrder && (
+        <div className="border rounded-lg p-6 h-fit space-y-6 md:w-full w-full">
+          <h2 className="text-lg font-semibold">Order Summary</h2>
+          <div className="space-y-2">
+            <p>Meal: {selectedItemForOrder.mealName}</p>
+            <p>Price:{selectedItemForOrder.mealPrice}</p>
+            <p>Quantity: {selectedItemForOrder.quantity}</p>
+            <p>Total: {selectedItemForOrder.quantity * selectedItemForOrder.mealPrice} TK</p>
+          </div>
 
-        {/* Items */}
-        <div className="space-y-2 max-h-60 overflow-y-auto">
-          {cartItems.map((item) => (
-            <div key={item.mealId} className="flex justify-between text-sm">
-              <span>
-                {item.mealName} x {item.quantity}
-              </span>
-              <span>{item.mealPrice * item.quantity} TK</span>
-            </div>
-          ))}
-        </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium">Delivery Address</label>
+            <textarea
+              value={orderAddress}
+              onChange={(e) => setOrderAddress(e.target.value)}
+              placeholder="Enter your delivery address"
+              className="w-full border rounded-md p-2"
+              rows={3}
+            />
+          </div>
 
-        {/* Total */}
-        <div className="flex justify-between font-bold text-lg mt-4">
-          <span>Total Items</span>
-          <span>{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
-        </div>
-        <div className="flex justify-between font-bold text-lg">
-          <span>Total Price</span>
-          <span>{totalPrice} TK</span>
-        </div>
+          <div>
+            <label className="block text-sm font-medium">Payment Method</label>
+            <input
+              type="text"
+              value="Cash on Delivery"
+              readOnly
+              className="w-full border rounded-md p-2 bg-gray-100 cursor-not-allowed"
+            />
+          </div>
 
-        {/* Delivery Address */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Delivery Address</label>
-          <textarea
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter your delivery address"
-            className="w-full border rounded-md p-2"
-            rows={3}
-          />
+          <Button
+            className="w-full"
+            onClick={handlePlaceOrder}
+            disabled={placingOrder}
+          >
+            {placingOrder ? "Placing..." : "Place Order"}
+          </Button>
         </div>
-
-        {/* Payment Method */}
-        <div>
-          <label className="block text-sm font-medium">Payment Method</label>
-          <input
-            type="text"
-            value="Cash on Delivery"
-            readOnly
-            className="w-full border rounded-md p-2 bg-gray-100 cursor-not-allowed"
-          />
-        </div>
-
-        {/* Place Order */}
-        <Button
-          className="w-full"
-          // onClick={handlePlaceOrder}
-          disabled={placingOrder}
-        >
-          {placingOrder ? "Placing..." : "Place Order (COD)"}
-        </Button>
-      </div>
+      )}
     </div>
   );
 };

@@ -41,7 +41,7 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
             sortBy: "price",
             sortOrder,
             page,
-            limit: 6,
+            limit: 8,
         });
 
         if (!res.error) {

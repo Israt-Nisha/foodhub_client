@@ -1,9 +1,11 @@
-import CartClientPage from '@/components/cart/CartClientPage';
-import React from 'react';
+import CartClientPage from "@/components/cart/CartClientPage";
+
+
 
 const CartPage = () => {
     return (
-        <div>
+        <div className="container mx-auto px-4 py-4">
+        
             <CartClientPage />
         </div>
     );
