@@ -9,8 +9,8 @@ export async function proxy(request: NextRequest) {
   const { data } = await userService.getSession();
   const user = data?.user;
 
-  
-  if (!user) {
+
+  if (!user || (pathname === "/cart" && user.role !== Roles.customer)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -51,6 +51,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/cart",
     "/dashboard",
     "/dashboard/:path*",
     "/dashboard-admin",

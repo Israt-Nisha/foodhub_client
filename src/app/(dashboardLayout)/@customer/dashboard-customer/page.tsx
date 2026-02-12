@@ -8,9 +8,6 @@ const CustomerProfile = async () => {
 
     return (
         <div >
-            {/* <h1 className="text-2xl font-semibold mb-6">
-                Welcome {user.name}!
-            </h1> */}
             <CustomerProfilePage userId={user.id} />
         </div>
     );

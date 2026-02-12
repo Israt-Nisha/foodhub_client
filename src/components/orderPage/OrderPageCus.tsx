@@ -1,30 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { orderService } from "@/services/order.service";
+import { OrderData, orderService } from "@/services/order.service";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import Link from "next/link";
+import { ReviewData, reviewService } from "@/services/review.service";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
 
-// type OrderStatus =
-//     | "PLACED"
-//     | "PREPARING"
-//     | "READY"
-//     | "DELIVERED"
-//     | "CANCELLED";
 
-// interface Order {
-//     id: string;
-//     status: OrderStatus;
-//     totalAmount: number;
-//     address: string;
-//     createdAt: string;
-// }
+
 
 export default function CustomerOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(false);
     const [cancelingId, setCancelingId] = useState<string | null>(null);
+
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
+    const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
+    const [reviewData, setReviewData] = useState<{ rating: number; comment: string }>({ rating: 0, comment: "" });
+    const [submittingReview, setSubmittingReview] = useState(false);
+    const [reviewsMap, setReviewsMap] = useState<Record<string, number>>({});
+
 
     const fetchOrders = async () => {
         setLoading(true);
@@ -58,6 +60,40 @@ export default function CustomerOrdersPage() {
             setCancelingId(null);
         }
     };
+
+
+    const openReviewModal = (mealId: string) => {
+        setSelectedMealId(mealId);
+        setReviewData({ rating: 0, comment: "" });
+        setReviewModalOpen(true);
+    };
+
+
+    const submitReview = async () => {
+        if (!selectedMealId) return;
+
+        setSubmittingReview(true);
+        try {
+            const payload: ReviewData = {
+                mealId: selectedMealId,
+                rating: reviewData.rating,
+                comment: reviewData.comment || undefined,
+            };
+            const res = await reviewService.createReview(payload);
+            if (!res.error) {
+                toast.success("Review submitted!");
+                setReviewsMap((prev) => ({ ...prev, [selectedMealId]: reviewData.rating }));
+                setReviewModalOpen(false);
+                fetchOrders();
+            }
+        } catch (err: any) {
+            toast.error(err.message || "Failed to submit review");
+        } finally {
+            setSubmittingReview(false);
+        }
+    };
+
+
 
     if (loading) return <p className="text-center py-10">Loading orders...</p>;
 
@@ -96,7 +132,7 @@ export default function CustomerOrdersPage() {
                         </div>
 
                         <div className="flex items-center gap-3">
-                           
+
                             <span
                                 className={`
                                     px-4 py-1 text-sm font-semibold rounded-full
@@ -125,11 +161,82 @@ export default function CustomerOrdersPage() {
                                     {cancelingId === order.id ? "Cancelling..." : "Cancel"}
                                 </Button>
                             )}
+
+
+                            {order.status === "DELIVERED" &&
+                                order.items.map((item) => {
+                                    const isReviewed = !!reviewsMap[item.meal.id];
+
+                                    return (
+                                        <Button
+                                            key={item.id}
+                                            size="sm"
+                                            disabled={isReviewed}
+                                            onClick={() => openReviewModal(item.meal.id)}
+                                        >
+                                            {isReviewed ? "Reviewed" : "+ Add Review"}
+                                        </Button>
+                                    );
+                                })}
+
+
                         </div>
 
                     </div>
                 ))}
             </div>
+
+            <Dialog open={reviewModalOpen} onOpenChange={setReviewModalOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Leave a Review</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                        <div>
+                            <label className="font-medium">Rating</label>
+                            <select
+                                className="w-full border rounded p-2 mt-1"
+                                value={reviewData.rating}
+                                onChange={(e) => setReviewData({ ...reviewData, rating: +e.target.value })}
+                            >
+                                <option value={0}>Select Rating</option>
+                                {[1, 2, 3, 4, 5].map((r) => (
+                                    <option key={r} value={r}>{r} Star{r > 1 ? "s" : ""}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="font-medium">Comment</label>
+                            <textarea
+                                className="w-full border rounded p-2 mt-1"
+                                rows={3}
+                                value={reviewData.comment}
+                                onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
+                                placeholder="Optional comment..."
+                            />
+                        </div>
+                    </div>
+
+                    <DialogFooter>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setReviewModalOpen(false)}
+                            className="mr-2"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={submitReview}
+                            disabled={submittingReview || reviewData.rating === 0}
+                        >
+                            {submittingReview ? "Submitting..." : "Submit"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

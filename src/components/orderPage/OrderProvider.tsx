@@ -5,20 +5,6 @@ import { orderService } from "@/services/order.service";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-// type OrderStatus =
-//   | "PLACED"
-//   | "PREPARING"
-//   | "READY"
-//   | "DELIVERED"
-//   | "CANCELLED";
-
-// interface Order {
-//   id: string;
-//   status: OrderStatus;
-//   totalAmount: number;
-//   address: string;
-//   createdAt: string;
-// }
 
 export default function ProviderOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);

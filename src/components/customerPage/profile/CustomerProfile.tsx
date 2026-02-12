@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { adminService } from "@/services/adminUser.service";
 import { UserData } from "@/types";
+import { User } from "lucide-react";
 
 const userSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -78,6 +79,7 @@ export default function CustomerProfilePage({ userId }: Props) {
                 image: image || undefined,
             };
             const res = await adminService.updateUser(userId, payload);
+            console.log("profile:", res.data)
             if (res.error) throw new Error(res.error.message);
 
             toast.success("Profile updated successfully");
@@ -110,7 +112,7 @@ export default function CustomerProfilePage({ userId }: Props) {
                             />
                         ) : (
                             <span className="flex items-center justify-center h-full text-gray-400">
-                                No Image
+                                <User/>
                             </span>
                         )}
                     </div>

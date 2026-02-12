@@ -71,7 +71,7 @@ export const adminService = {
 
    updateUser: async (id: string, payload: Partial<UserData>) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/users/${id}`, {
+      const res = await fetch(`${BACKEND_URL}/api/admin/users/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
