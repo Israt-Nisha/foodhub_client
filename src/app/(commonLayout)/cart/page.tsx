@@ -1,4 +1,4 @@
-import CartClientPage from "@/components/cart/CartClientPage";
+import CartClientPage from "@/components/customerPage/cart/CartClientPage";
 
 
 

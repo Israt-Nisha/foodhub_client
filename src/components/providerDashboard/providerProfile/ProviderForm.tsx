@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-/* ---------------- Schema ---------------- */
 const providerSchema = z.object({
   restaurantName: z.string().min(1, "Restaurant name is required"),
   address: z.string().min(1, "Address is required"),
@@ -60,7 +59,6 @@ export default function ProviderForm({
 
       let logo = provider?.logo;
 
-      /* ---------- Upload logo ---------- */
       if (logoFile) {
         const fd = new FormData();
         fd.append("image", logoFile);

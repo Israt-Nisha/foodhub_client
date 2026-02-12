@@ -19,7 +19,6 @@ const ProviderProfileManage = ({ userId }: Props) => {
     const [openForm, setOpenForm] = useState(false);
 
 
-    //  Fetch provider profile
     const fetchProfile = async () => {
         setLoading(true);
 

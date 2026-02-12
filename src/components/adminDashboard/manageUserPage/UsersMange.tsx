@@ -15,7 +15,6 @@ const ManageUsers = () => {
     const [editingUserId, setEditingUserId] = useState<string | null>(null);
     const [status, setStatus] = useState<UserStatus>("ACTIVE");
 
-    /* ---------------- Fetch users ---------------- */
     const fetchUsers = async () => {
         setLoading(true);
 
@@ -23,7 +22,6 @@ const ManageUsers = () => {
         console.log("API response:", res);
 
         if (!res?.error) {
-            // Use the inner `data` array
             const usersArray = Array.isArray(res.data?.data) ? res.data.data : [];
             setUsers(usersArray);
         } else {
@@ -37,7 +35,6 @@ const ManageUsers = () => {
         fetchUsers();
     }, []);
 
-    /* ---------------- Delete user ---------------- */
     const handleDelete = async (userId: string) => {
         const confirmed = window.confirm(
             "Are you sure you want to delete this user?"
@@ -61,7 +58,7 @@ const ManageUsers = () => {
 
     return (
         <>
-            {/* User list */}
+         
             {loading ? (
                 <p>Loading users...</p>
             ) : (

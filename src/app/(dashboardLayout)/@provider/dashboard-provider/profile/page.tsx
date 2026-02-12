@@ -1,5 +1,5 @@
 import ProviderProfileManage from "@/components/providerDashboard/providerProfile/CreateOrEditPro";
-import { providerService } from "@/services/provider.service";
+
 
 import { userService } from "@/services/user.service";
 
