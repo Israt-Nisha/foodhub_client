@@ -67,7 +67,7 @@ export const orderService = {
 
   updateOrderStatus: async (id: string, status: OrderData["status"]) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/orders/${id}/status`, {
+      const res = await fetch(`${BACKEND_URL}/api/orders/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

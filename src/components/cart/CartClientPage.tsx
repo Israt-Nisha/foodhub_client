@@ -172,7 +172,7 @@ const CartClientPage = () => {
           <h2 className="text-lg font-semibold">Order Summary</h2>
           <div className="space-y-2">
             <p>Meal: {selectedItemForOrder.mealName}</p>
-            <p>Price:{selectedItemForOrder.mealPrice}</p>
+            <p>Price: {selectedItemForOrder.mealPrice}</p>
             <p>Quantity: {selectedItemForOrder.quantity}</p>
             <p>Total: {selectedItemForOrder.quantity * selectedItemForOrder.mealPrice} TK</p>
           </div>
