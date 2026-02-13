@@ -1,11 +1,12 @@
-import React from 'react';
+import AdminDashboardClient from "@/components/adminDashboard/adminStats/AdminStats";
+import { adminService } from "@/services/adminUser.service";
 
-const AdminPage = () => {
-    return (
-        <div>
-            <h1>This is admin Page</h1>
-        </div>
-    );
+
+const AdminDashboardServer = async () => {
+
+ 
+
+  return <AdminDashboardClient />;
 };
 
-export default AdminPage;
+export default AdminDashboardServer;

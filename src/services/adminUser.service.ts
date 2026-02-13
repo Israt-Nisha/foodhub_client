@@ -5,6 +5,25 @@ import { UserData, UserStatus } from "@/types";
 const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
 
 export const adminService = {
+  
+  getStats: async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/stats`, {
+        cache: "no-store",
+        credentials: "include",
+      });
+      const data = await res.json();
+      
+      return { data, error: null };
+    } catch (err: any) {
+      return {
+        data: null,
+        error: { message: err?.message || "Something went wrong" },
+      };
+    }
+  },
+
+
   getAllUsers: async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
