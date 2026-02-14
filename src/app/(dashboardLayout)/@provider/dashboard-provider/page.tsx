@@ -1,11 +1,5 @@
-import React from 'react';
+import ProviderDashboardClient from "@/components/providerDashboard/providerStats/ProviderStats";
 
-const ProviderPage = () => {
-    return (
-        <div>
-            <h1>This is ProviderPage</h1>
-        </div>
-    );
-};
-
-export default ProviderPage;
+export default function ProviderDashboardPage() {
+  return <ProviderDashboardClient />;
+}
