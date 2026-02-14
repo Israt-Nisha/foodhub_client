@@ -107,11 +107,10 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                 <>
                     <MealsGrid meals={meals} />
 
-                    {/* PAGINATION */}
-                    {/* PAGINATION */}
+                   
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center gap-2 mt-10">
-                            {/* Previous */}
+                           
                             <Button
                                 variant="outline"
                                 size="icon"
@@ -121,7 +120,7 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                                 <ChevronLeft className="h-4 w-4" />
                             </Button>
 
-                            {/* Page Numbers */}
+                           
                             {getPageNumbers().map((p) => (
                                 <Button
                                     key={p}
@@ -133,7 +132,7 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                                 </Button>
                             ))}
 
-                            {/* Next */}
+                          
                             <Button
                                 variant="outline"
                                 size="icon"

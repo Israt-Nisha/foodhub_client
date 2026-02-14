@@ -1,19 +1,19 @@
-import CategorySection from "@/components/homepage/Category";
+import FeaturedProviders from "@/components/homepage/FeaturedProviders";
 import HeroSection from "@/components/homepage/HeroSection";
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+import CategorySections from "@/components/homepage/homeCategory";
+import RecentMeal from "@/components/homepage/RecentMeals";
+import { WhyWeBest } from "@/components/homepage/WhyBest";
 
 
 export default async function Home() {
 
-  const session = await authClient.getSession();
-
-  console.log(session);
-
   return (
     <div>
-      <HeroSection/>
-      <CategorySection/>
+      <HeroSection />
+      <CategorySections/>
+      <RecentMeal />
+      <FeaturedProviders/>
+      <WhyWeBest />
     </div>
   );
 }

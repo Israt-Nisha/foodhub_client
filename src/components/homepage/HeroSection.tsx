@@ -30,7 +30,7 @@ const slides = [
     title: "Quality Food. Honest Pricing.",
     subtitle: "No junk. No compromise. Just real food.",
     cta: "Order Now",
-    catUrl: "/order",
+    catUrl: "/cart",
     image:
       "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1200",
   },
@@ -63,7 +63,6 @@ export default function HeroSection() {
               className="object-cover"
             />
 
-            {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent">
               <div className="mx-auto flex h-full max-w-7xl items-center px-6">
                 <div className="max-w-xl space-y-5 text-white">
@@ -81,13 +80,13 @@ export default function HeroSection() {
                       {slide.cta}
                     </Button>
                    </Link>
-                    <Link href="/about">
+                    <Link href="/register">
                     <Button
                       size="lg"
                       variant="outline"
                       className="border-white text-black hover:bg-white hover:text-black"
                     >
-                      Learn More
+                      Become a Provider
                     </Button>
                     </Link>
                   </div>

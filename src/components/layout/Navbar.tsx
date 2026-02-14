@@ -49,7 +49,6 @@ export const Navbar = () => {
 
   try {
     const res = await cartService.getCartItems();
-    console.log("Cart API response:", res); // for debugging
 
     const items = res.data || [];
     const totalQty = items.reduce((sum: number, item: any) => sum + item.quantity, 0);
