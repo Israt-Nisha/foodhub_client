@@ -9,11 +9,15 @@ export interface CategoryData {
   imageUrl?: string;
 }
 
-export type CategoryWithCount = CategoryData & {
+export interface CategoryWithCount  {
+  id: string;
+  name: string;
+  slug: string;
+  imageUrl?: string;
   _count?: {
     meals: number;
   };
-};
+}
 
 
 

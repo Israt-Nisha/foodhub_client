@@ -34,7 +34,7 @@ export default function ProviderDashboardClient() {
 
   if (loading) return <p className="p-10 text-center">Loading...</p>;
   if (error) return <p className="p-10 text-center text-red-500">{error}</p>;
-  if (!stats) return <p className="p-10 text-center">No data</p>;
+  if (!stats) return <p className="p-10 text-center">No stats found. Please create your provider profile first.</p>;
 
   return (
     <div className="max-w-7xl p-4 md:p-8 space-y-8">

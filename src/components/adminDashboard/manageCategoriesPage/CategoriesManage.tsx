@@ -122,6 +122,7 @@ const CategoriesManage = () => {
                   size="sm"
                   variant="destructive"
                   disabled={(category._count?.meals ?? 0) > 0}
+                  onClick={() => handleDelete(category.id)}
                 >
                   Delete
                 </Button>
