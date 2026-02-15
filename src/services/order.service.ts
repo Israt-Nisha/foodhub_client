@@ -1,6 +1,5 @@
-import { env } from "@/env";
 
-const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_URL = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export interface OrderItemData {
   mealId: string;

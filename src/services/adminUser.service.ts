@@ -1,8 +1,7 @@
-import { env } from "@/env";
 import { UserData, UserStatus } from "@/types";
 
+const BACKEND_URL = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_BACKEND_URL;
 
-const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
 
 export const adminService = {
   

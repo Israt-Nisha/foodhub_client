@@ -23,7 +23,7 @@ const MealsManage = ({ providerId }: Props) => {
         setLoading(true);
 
         const res = await mealService.getAllMeals();
-        console.log("getMeals:", res)
+        console.log("getMeals:", res.data, "err:", res.error)
 
         if (!res?.error) {
             const mealsArray = Array.isArray(res.data)
@@ -34,7 +34,7 @@ const MealsManage = ({ providerId }: Props) => {
 
             setMeals(mealsArray.filter((m: MealData) => m.providerId === providerId));
         } else {
-            toast.error("Failed to load meals");
+            toast.error( "Failed to load... meals:")
         }
 
         setLoading(false);

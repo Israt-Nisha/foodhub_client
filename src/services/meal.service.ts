@@ -1,5 +1,5 @@
-import { env } from "@/env";
-import { CuisineType, DietaryType, MealCreateInput, MealData, MealUpdateInput } from "@/types";
+
+import {  MealCreateInput, MealData, MealUpdateInput } from "@/types";
 
 export interface GetMealsParams {
   search?: string;
@@ -16,12 +16,18 @@ export interface GetMealsParams {
   sortOrder?: "asc" | "desc";
 }
 
-const BACKEND_URL = env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_URL = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const mealService = {
   getAllMeals: async (params?: GetMealsParams) => {
     try {
-      const url = new URL(`${BACKEND_URL}/api/meals`);
+        const isBrowser = typeof window !== "undefined";
+
+      const baseUrl = isBrowser
+        ? window.location.origin         
+        : process.env.NEXT_PUBLIC_BACKEND_URL 
+
+      const url = new URL("/api/meals", baseUrl);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -36,19 +42,28 @@ export const mealService = {
         credentials: "include",
       });
 
-      const data = await res.json();
 
-      if (data.error) {
+      const json = await res.json();
+     if (!res.ok || json.error) {
         return {
-          data: null,
-          error: { message: "Error: Failed to fetched Meals" },
+          data: [],
+          pagination: { total: 0, page: 1, limit: params?.limit || 10, totalPages: 1 },
+          error: { message: "Failed to fetch meals" },
         };
       }
 
-      return { data: data, pagination: data.pagination, error: null };
+      return {
+        data: json.data?.data ?? [],                
+        pagination: json.data?.pagination ?? null,  
+        error: null,
+      };
 
     } catch (error) {
-      return { data: null, error: { message: "Something Went Wrong" } };
+      return {
+        data: [],
+        pagination: { total: 0, page: 1, limit: params?.limit || 10, totalPages: 1 },
+        error: { message: "Something went wrong" },
+      };
     }
 
 

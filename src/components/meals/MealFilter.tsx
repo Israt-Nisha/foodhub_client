@@ -44,11 +44,12 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
             limit: 8,
         });
 
-        if (!res.error) {
-            setMeals(res.data.data || []);
-            setTotalPages(res.pagination?.totalPages || 1);
-        }
+        console.log("CLIENT MEALS RES:", res);
 
+        if (!res.error) {
+        setMeals(res.data);          
+        setTotalPages(res.pagination?.totalPages ?? 1);
+    }
         setLoading(false);
     };
 
@@ -107,10 +108,10 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                 <>
                     <MealsGrid meals={meals} />
 
-                   
+
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center gap-2 mt-10">
-                           
+
                             <Button
                                 variant="outline"
                                 size="icon"
@@ -120,7 +121,7 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                                 <ChevronLeft className="h-4 w-4" />
                             </Button>
 
-                           
+
                             {getPageNumbers().map((p) => (
                                 <Button
                                     key={p}
@@ -132,7 +133,7 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                                 </Button>
                             ))}
 
-                          
+
                             <Button
                                 variant="outline"
                                 size="icon"

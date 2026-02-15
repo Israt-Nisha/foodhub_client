@@ -5,8 +5,8 @@ import { mealService } from "@/services/meal.service";
 
 
 const RecentMeal = async () => {
-    const { data } = await mealService.getAllMeals({ limit: 4 });
-    const meals = data?.data || []
+    const res = await mealService.getAllMeals({ limit: 4 });
+    
     return (
         <section className="container mx-auto px-4 py-16 space-y-8">
             <div className="flex items-center text-center justify-center">
@@ -19,7 +19,7 @@ const RecentMeal = async () => {
 
             </div>
 
-            <MealsGrid meals={meals} />
+            <MealsGrid meals={res.data} />
         </section>
     );
 };
