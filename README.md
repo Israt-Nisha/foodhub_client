@@ -10,7 +10,6 @@ This repository contains the frontend application built with Next.js and TypeScr
 - 🌍 Live Website: [Food Hub Frontend ](https://foodhub-client-tau.vercel.app/) 
 - 🔗 Backend API: [Food Hub Backend Live](https://food-hub-server-black.vercel.app/)   
 
-> Replace the above links with your actual URLs.
 
 ---
 
