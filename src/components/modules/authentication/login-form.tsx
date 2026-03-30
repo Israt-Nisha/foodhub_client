@@ -137,6 +137,9 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         >
           Login
         </Button>
+        <p className="text-sm text-muted-foreground">
+            Don't have an account? <a href="/register" className="text-primary underline">Register</a>
+          </p>
         {/* <Button
           onClick={handleGoogleLogin}
           variant="outline"
