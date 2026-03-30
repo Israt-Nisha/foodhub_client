@@ -64,6 +64,26 @@ export const orderService = {
     }
   },
 
+  getOrderByPayment: async (paymentId: string) => {
+    try {
+      const res = await fetch(
+        `${BACKEND_URL}/api/orders/by-payment/${paymentId}`,
+        {
+          cache: "no-store",
+          credentials: "include",
+        }
+      );
+
+      const data = await res.json();
+
+      return data.success
+        ? { data: data.data, error: null }
+        : { data: null, error: data.message || data.error };
+    } catch (err: any) {
+      return { data: null, error: err.message || "Something went wrong" };
+    }
+  },
+
   updateOrderStatus: async (id: string, status: OrderData["status"]) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/orders/${id}`, {

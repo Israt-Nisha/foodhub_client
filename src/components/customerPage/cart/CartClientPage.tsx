@@ -25,6 +25,8 @@ const CartClientPage = () => {
   const [orderAddress, setOrderAddress] = useState("");
   const [placingOrder, setPlacingOrder] = useState(false);
 
+  const [paymentMethod, setPaymentMethod] = useState<"COD" | "ONLINE">("COD");
+
 
   const fetchCart = async () => {
     const res = await cartService.getCartItems();
@@ -68,7 +70,7 @@ const CartClientPage = () => {
     setPlacingOrder(true);
 
     try {
-      
+
       const mealRes = await mealService.getMealById(selectedItemForOrder.mealId);
       const mealData = await mealRes.data;
 
@@ -81,6 +83,7 @@ const CartClientPage = () => {
         providerId: mealData.providerId,
         address: orderAddress,
         totalAmount: selectedItemForOrder.mealPrice * selectedItemForOrder.quantity,
+        paymentMethod,
         items: [
           { mealId: selectedItemForOrder.mealId, quantity: selectedItemForOrder.quantity, price: selectedItemForOrder.mealPrice, },
         ],
@@ -93,13 +96,23 @@ const CartClientPage = () => {
         return;
       }
 
-      toast.success("Order placed successfully (one item at a time)");
+      // 🟢 COD FLOW
+      if (res.data.type === "COD") {
+        toast.success("Order placed successfully");
 
-      await cartService.deleteCartItem(selectedItemForOrder.id);
-      fetchCart();
-      window.dispatchEvent(new Event("cartUpdated"));
-      setSelectedItemForOrder(null);
-      setOrderAddress("");
+        await cartService.deleteCartItem(selectedItemForOrder.id);
+        fetchCart();
+        window.dispatchEvent(new Event("cartUpdated"));
+
+        setSelectedItemForOrder(null);
+        setOrderAddress("");
+      }
+
+      // 🔵 ONLINE FLOW
+      if (res.data.type === "ONLINE") {
+        // redirect to stripe checkout
+        window.location.href = res.data.checkoutUrl;
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to place order");
     } finally {
@@ -190,12 +203,14 @@ const CartClientPage = () => {
 
           <div>
             <label className="block text-sm font-medium">Payment Method</label>
-            <input
-              type="text"
-              value="Cash on Delivery"
-              readOnly
-              className="w-full border rounded-md p-2 bg-gray-100 cursor-not-allowed"
-            />
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value as "COD" | "ONLINE")}
+              className="w-full border rounded-md p-2"
+            >
+              <option value="COD">Cash on Delivery</option>
+              <option value="ONLINE">Online Payment (Card)</option>
+            </select>
           </div>
 
           <Button

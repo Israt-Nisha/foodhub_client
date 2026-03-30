@@ -4,6 +4,11 @@ type OrderStatus =
   | "READY"
   | "DELIVERED"
   | "CANCELLED";
+type PaymentStatus =
+  | "PENDIGN"
+  | "PAID"
+  | "FAILED"
+  | "REFUNDED";
 
 interface Meal {
   id: string;
@@ -33,6 +38,8 @@ interface Order {
   id: string;
   customerId: string;
   providerId: string;
+  paymentMethod: string;
+  paymentStatus: PaymentStatus;
   address: string;
   totalAmount: number;
   status: OrderStatus;

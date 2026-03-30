@@ -125,6 +125,15 @@ export default function CustomerOrdersPage() {
                                 <span className="font-medium">Total:</span>{" "}
                                 {order.totalAmount} TK
                             </p>
+                            <p className="text-sm">
+                                <span className="font-medium">Payment Method:</span>{" "}
+                                {order.paymentMethod}
+                            </p>
+
+                            <p className="text-sm">
+                                <span className="font-medium">Payment Status:</span>{" "}
+                                {order.paymentStatus}
+                            </p>
 
                             <p className="text-sm text-gray-500">
                                 {new Date(order.createdAt).toLocaleString()}
@@ -151,7 +160,7 @@ export default function CustomerOrdersPage() {
                                 {order.status}
                             </span>
 
-                            {order.status === "PLACED" && (
+                            {(order.status === "PLACED" && order.paymentMethod === "COD") && (
                                 <Button
                                     size="sm"
                                     variant="destructive"
