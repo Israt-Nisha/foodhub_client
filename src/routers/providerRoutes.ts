@@ -20,6 +20,10 @@ export const providerRoutes: Route[] = [
         title: "Manage Orders",
         url: "/dashboard-provider/orders",
       },
+      { 
+        title: "Home",
+        url: "/",
+      },
     ],
   },
 ];

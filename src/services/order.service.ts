@@ -4,6 +4,7 @@ const BACKEND_URL = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC
 export interface OrderItemData {
   mealId: string;
   quantity: number;
+  price?: number;
 }
 
 export interface OrderData {
@@ -12,6 +13,8 @@ export interface OrderData {
   providerId: string;
   address: string;
   totalAmount: number;
+  paymentMethod: "COD" | "ONLINE";
+  paymentStatus?: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
   status?: "PLACED" | "PREPARING" | "READY" | "DELIVERED" | "CANCELLED";
   items: OrderItemData[];
 }

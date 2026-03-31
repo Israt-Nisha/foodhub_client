@@ -12,7 +12,11 @@ export const customerRoutes: Route[] = [
       {
         title: "My Order",
         url: "/dashboard-customer/orders",
-      }
+      },
+      { 
+        title: "Home",
+        url: "/",
+      },
     ],
   },
 ];
