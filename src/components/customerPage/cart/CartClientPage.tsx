@@ -112,6 +112,12 @@ const CartClientPage = () => {
       if (res.data.type === "ONLINE") {
         // redirect to stripe checkout
         window.location.href = res.data.checkoutUrl;
+        await cartService.deleteCartItem(selectedItemForOrder.id);
+        fetchCart();
+        window.dispatchEvent(new Event("cartUpdated"));
+
+        setSelectedItemForOrder(null);
+        setOrderAddress("");
       }
     } catch (err: any) {
       toast.error(err.message || "Failed to place order");
