@@ -20,7 +20,8 @@ This repository contains the frontend application built with Next.js and TypeScr
 - **Tailwind CSS** — Responsive and consistent UI  
 - **ShadCN UI** — Reusable UI components  
 - **Lucide Icons** — Icon system  
-- **Better Auth (Client)** — Authentication handling  
+- **Better Auth (Client)** — Authentication handling 
+- **Stripe** —  Payment Method  
 - **Fetch API** — API communication  
 
 ---
@@ -36,7 +37,7 @@ This repository contains the frontend application built with Next.js and TypeScr
 ### 👤 Customer Features
 - Register & login  
 - Add meals to cart  
-- Place orders (Cash on Delivery)  
+- Place orders (Stripe or Cash on Delivery)  
 - Track order status  
 - View order history  
 - Manage profile  
