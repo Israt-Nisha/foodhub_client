@@ -63,12 +63,12 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
   });
 
-  // const handleGoogleLogin = async () => {
-  //   await authClient.signIn.social({
-  //     provider: "google",
-  //     callbackURL: env.NEXT_PUBLIC_FRONTEND_URL!,
-  //   });
-  // };
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: env.NEXT_PUBLIC_FRONTEND_URL!,
+    });
+  };
 
   // --- VIEW 1: ROLE SELECTION ---
   if (!selectedRole) {
@@ -190,11 +190,11 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
           Register
         </Button>
 
-        {/* {selectedRole === "CUSTOMER" && (
+        {selectedRole === "CUSTOMER" && (
           <Button onClick={handleGoogleLogin} variant="outline" type="button" className="w-full cursor-pointer">
             Continue with Google
           </Button>
-        )} */}
+        )}
       </CardFooter>
     </Card>
   );

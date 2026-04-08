@@ -14,7 +14,7 @@ type Provider = {
 const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
   if (!providers?.length) {
     return (
-      <p className="text-center text-gray-500 py-10">
+      <p className="text-center text-muted-foreground py-10">
         No providers found
       </p>
     );
@@ -26,7 +26,7 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
         <Link
           key={provider.id}
           href={`/providers/${provider.id}`}
-          className="group bg-white rounded-2xl border p-4 sm:p-5
+          className="group bg-card rounded-2xl border border-border p-4 sm:p-5
                      transition-all duration-300
                      hover:shadow-xl hover:-translate-y-1"
         >
@@ -37,7 +37,7 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
                 relative 
                 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28
                 rounded-full overflow-hidden
-                border bg-white shadow-sm
+                border border-border bg-card shadow-sm
               ">
                 <Image
                   src={provider.logo}
@@ -52,7 +52,7 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
                 flex items-center justify-center
                 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28
                 rounded-full
-                bg-gray-100 text-gray-400
+                bg-muted text-muted-foreground
               ">
                 <ChefHat className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
@@ -62,7 +62,7 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
           {/* INFO */}
           <div className="text-center space-y-1">
             <h2 className="
-              text-base sm:text-lg font-semibold
+              text-base sm:text-lg font-semibold text-foreground
               line-clamp-1
               group-hover:text-primary transition
             ">
@@ -71,7 +71,7 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
 
             {provider.address && (
               <p className="
-                text-xs sm:text-sm text-gray-500
+                text-xs sm:text-sm text-muted-foreground
                 line-clamp-2
               ">
                 {provider.address}

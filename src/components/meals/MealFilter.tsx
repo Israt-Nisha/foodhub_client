@@ -5,7 +5,16 @@ import { mealService } from "@/services/meal.service";
 import MealsGrid from "./MealsGrid";
 import { MealData } from "@/types";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 interface MealFilterPageProps {
     initialMeals: MealData[];
@@ -16,6 +25,8 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
     const [cuisine, setCuisine] = useState("");
     const [dietary, setDietary] = useState("");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearchTerm = useDebounce(searchTerm, 500);
     const [loading, setLoading] = useState(false);
 
     const [page, setPage] = useState(1);
@@ -36,8 +47,9 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
         setLoading(true);
 
         const res = await mealService.getAllMeals({
-            cuisine: cuisine || undefined,
-            dietary: dietary || undefined,
+            search: debouncedSearchTerm || undefined,
+            cuisine: (cuisine && cuisine !== "all") ? cuisine : undefined,
+            dietary: (dietary && dietary !== "all") ? dietary : undefined,
             sortBy: "price",
             sortOrder,
             page,
@@ -47,59 +59,73 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
         console.log("CLIENT MEALS RES:", res);
 
         if (!res.error) {
-        setMeals(res.data);          
-        setTotalPages(res.pagination?.totalPages ?? 1);
-    }
+            setMeals(res.data);
+            setTotalPages(res.pagination?.totalPages ?? 1);
+        }
         setLoading(false);
     };
 
     useEffect(() => {
         setPage(1);
-    }, [cuisine, dietary, sortOrder]);
+    }, [debouncedSearchTerm, cuisine, dietary, sortOrder]);
 
     useEffect(() => {
         fetchMeals();
-    }, [page, cuisine, dietary, sortOrder]);
+    }, [page, debouncedSearchTerm, cuisine, dietary, sortOrder]);
 
     return (
         <div className="container mx-auto px-4 pb-10 space-y-8">
-            {/* FILTERS */}
-            <div className="flex flex-col md:flex-row gap-4">
-                <select
-                    value={cuisine}
-                    onChange={(e) => setCuisine(e.target.value)}
-                    className="border rounded-md px-3 py-2"
-                >
-                    <option value="">All Cuisines</option>
-                    <option value="BENGALI">Bengali</option>
-                    <option value="INDIAN">Indian</option>
-                    <option value="CHINESE">Chinese</option>
-                    <option value="ITALIAN">Italian</option>
-                    <option value="THAI">Thai</option>
-                </select>
+            {/* SEARCH AND FILTERS */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-wrap items-center gap-4">
+                    <Select value={cuisine} onValueChange={(v) => setCuisine(v)}>
+                        <SelectTrigger className="w-[180px] border  rounded-md  focus:ring-orange-500 transition-all">
+                            <SelectValue placeholder="All Cuisines" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Cuisines</SelectItem>
+                            <SelectItem value="BENGALI">Bengali</SelectItem>
+                            <SelectItem value="INDIAN">Indian</SelectItem>
+                            <SelectItem value="CHINESE">Chinese</SelectItem>
+                            <SelectItem value="ITALIAN">Italian</SelectItem>
+                            <SelectItem value="THAI">Thai</SelectItem>
+                        </SelectContent>
+                    </Select>
 
-                <select
-                    value={dietary}
-                    onChange={(e) => setDietary(e.target.value)}
-                    className="border rounded-md px-3 py-2"
-                >
-                    <option value="">All Dietary</option>
-                    <option value="VEG">Veg</option>
-                    <option value="NON_VEG">Non Veg</option>
-                    <option value="VEGAN">Vegan</option>
-                    <option value="HALAL">Halal</option>
-                </select>
+                    <Select value={dietary} onValueChange={(v) => setDietary(v)}>
+                        <SelectTrigger className="w-[180px] border  rounded-md  focus:ring-orange-500 transition-all">
+                            <SelectValue placeholder="All Dietary" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Dietary</SelectItem>
+                            <SelectItem value="VEG">Veg</SelectItem>
+                            <SelectItem value="NON_VEG">Non Veg</SelectItem>
+                            <SelectItem value="VEGAN">Vegan</SelectItem>
+                            <SelectItem value="HALAL">Halal</SelectItem>
+                        </SelectContent>
+                    </Select>
 
-                <select
-                    value={sortOrder}
-                    onChange={(e) =>
-                        setSortOrder(e.target.value === "asc" ? "asc" : "desc")
-                    }
-                    className="border rounded-md px-3 py-2"
-                >
-                    <option value="asc">Price: Low to High</option>
-                    <option value="desc">Price: High to Low</option>
-                </select>
+                    <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as "asc" | "desc")}>
+                        <SelectTrigger className="w-[180px] border  rounded-md  focus:ring-orange-500 transition-all">
+                            <SelectValue placeholder="Price Sorting" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="asc">Price: Low to High</SelectItem>
+                            <SelectItem value="desc">Price: High to Low</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="relative w-full md:w-72 lg:w-96">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                        type="text"
+                        placeholder="Search for delicious meals..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 h-11 bg-background border-border focus:border-orange-500 focus:ring-orange-500 rounded-xl transition-all shadow-sm"
+                    />
+                </div>
             </div>
 
             {loading ? (
@@ -128,6 +154,7 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                                     variant={p === page ? "default" : "outline"}
                                     size="icon"
                                     onClick={() => setPage(p)}
+                                    className={p === page ? "bg-orange-500 hover:bg-orange-600 text-white border-orange-500" : "hover:text-orange-500 hover:border-orange-500"}
                                 >
                                     {p}
                                 </Button>

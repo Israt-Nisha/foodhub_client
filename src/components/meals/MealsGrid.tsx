@@ -52,7 +52,8 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
   };
 
   if (!meals || meals.length === 0) {
-    return <p className="text-center text-gray-500 py-10">Meals not found</p>;
+    return <p className="text-center text-muted-foreground
+                line-clamp-2 py-10">Meals not found</p>;
   }
 
   return (
@@ -60,7 +61,7 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
       {meals.map((meal) => (
         <div
           key={meal.id}
-          className="border rounded-lg p-4 hover:shadow-md transition flex flex-col"
+          className="bg-card border border-border rounded-xl p-4 hover:shadow-md transition flex flex-col"
         >
           <Link href={`/meals/${meal.id}`} className="block flex-1">
             {meal.imageUrl && (
@@ -75,11 +76,13 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
             )}
 
             <h3 className="text-lg font-semibold">{meal.name}</h3>
-            <p className="text-sm text-gray-500">{meal.category?.name}</p>
+            <p className="text-sm text-muted-foreground
+                line-clamp-2">{meal.category?.name}</p>
             <p className="mt-2 font-bold text-primary">
               Price: {meal.price} TK
             </p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-muted-foreground
+                line-clamp-2 mt-1">
               {meal.provider?.restaurantName}
             </p>
           </Link>

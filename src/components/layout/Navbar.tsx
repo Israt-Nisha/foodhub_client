@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "./ThemeToggle";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,49 +42,49 @@ export const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
- const fetchCartCount = async () => {
-  if (!userInfo || userInfo.role !== "CUSTOMER") {
-    setCartCount(0);
-    return;
-  }
+  const fetchCartCount = async () => {
+    if (!userInfo || userInfo.role !== "CUSTOMER") {
+      setCartCount(0);
+      return;
+    }
 
-  try {
-    const res = await cartService.getCartItems();
+    try {
+      const res = await cartService.getCartItems();
 
-    const items = res.data || [];
-    const totalQty = items.reduce((sum: number, item: any) => sum + item.quantity, 0);
+      const items = res.data || [];
+      const totalQty = items.reduce((sum: number, item: any) => sum + item.quantity, 0);
 
-    setCartCount(totalQty);
-    console.log("Cart count:", totalQty);
-  } catch (error) {
-    console.error("Failed to fetch cart count", error);
-  }
-};
-
-
-
-useEffect(() => {
-  if (session) {
-    setUserInfo(session.user as User);
-  } else {
-    setUserInfo(null);
-    setCartCount(0);
-  }
-}, [session]);
-
-
-useEffect(() => {
-  if (!userInfo || userInfo.role !== "CUSTOMER") return;
-
-  fetchCartCount();
-
-  const handleCartUpdate = () => fetchCartCount();
-  window.addEventListener("cartUpdated", handleCartUpdate);
-
-  return () => {
-    window.removeEventListener("cartUpdated", handleCartUpdate);
+      setCartCount(totalQty);
+      console.log("Cart count:", totalQty);
+    } catch (error) {
+      console.error("Failed to fetch cart count", error);
+    }
   };
-}, [userInfo]);
+
+
+
+  useEffect(() => {
+    if (session) {
+      setUserInfo(session.user as User);
+    } else {
+      setUserInfo(null);
+      setCartCount(0);
+    }
+  }, [session]);
+
+
+  useEffect(() => {
+    if (!userInfo || userInfo.role !== "CUSTOMER") return;
+
+    fetchCartCount();
+
+    const handleCartUpdate = () => fetchCartCount();
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, [userInfo]);
 
 
   const handleSignOut = async () => {
@@ -106,6 +107,7 @@ useEffect(() => {
     { name: "Home", href: "/" },
     { name: "Meals", href: "/meals" },
     { name: "Providers", href: "/providers" },
+    { name: "About Us", href: "/about" },
   ];
 
   const dashboardLink: NavItem | null = userInfo
@@ -141,7 +143,8 @@ useEffect(() => {
             </NavigationMenu>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <ThemeToggle />
             <div className="flex gap-2 items-center">
               {userInfo ? (
                 <>
@@ -149,7 +152,7 @@ useEffect(() => {
                     <Link href="/cart" className="relative mr-6">
                       <ShoppingCart className="w-5 h-5" />
                       {cartCount > 0 && (
-                        <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-black text-white text-xs flex items-center justify-center">
+                        <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
                           {cartCount}
                         </span>
                       )}
@@ -187,11 +190,14 @@ useEffect(() => {
             </Link>
 
             <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="w-4 h-4" />
-                </Button>
-              </SheetTrigger>
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Menu className="w-4 h-4" />
+                    </Button>
+                  </SheetTrigger>
+                </div>
 
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
@@ -214,7 +220,7 @@ useEffect(() => {
                           <Link href="/cart" className="relative">
                             <ShoppingCart className="w-5 h-5" />
                             {cartCount > 0 && (
-                              <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-black text-white text-xs flex items-center justify-center">
+                              <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
                                 {cartCount}
                               </span>
                             )}

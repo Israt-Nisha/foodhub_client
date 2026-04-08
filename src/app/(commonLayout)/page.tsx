@@ -3,6 +3,9 @@ import HeroSection from "@/components/homepage/HeroSection";
 import CategorySections from "@/components/homepage/homeCategory";
 import RecentMeal from "@/components/homepage/RecentMeals";
 import { WhyWeBest } from "@/components/homepage/WhyBest";
+import { StatsSection } from "@/components/homepage/StatsSection";
+import { TestimonialsSection } from "@/components/homepage/TestimonialsSection";
+import { CTASection } from "@/components/homepage/CTASection";
 
 
 export default async function Home() {
@@ -12,8 +15,11 @@ export default async function Home() {
       <HeroSection />
       <CategorySections/>
       <RecentMeal />
+      <StatsSection />
       <FeaturedProviders/>
       <WhyWeBest />
+      <TestimonialsSection />
+      <CTASection />
     </div>
   );
 }

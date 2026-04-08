@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const slides = [
@@ -74,20 +73,15 @@ export default function HeroSection() {
                   </p>
 
                   <div className="flex gap-4 pt-4">
-                   <Link href={slide.catUrl}>
-                    <Button 
-                     size="lg" className="bg-primary text-white">
-                      {slide.cta}
-                    </Button>
-                   </Link>
+                    <Link href={slide.catUrl}>
+                      <button className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow hover:opacity-90 transition">
+                        {slide.cta}
+                      </button>
+                    </Link>
                     <Link href="/register">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="border-white text-black hover:bg-white hover:text-black"
-                    >
-                      Become a Provider
-                    </Button>
+                      <button className="inline-flex items-center gap-2 rounded-md border border-white bg-transparent px-6 py-3 text-base font-semibold text-white hover:bg-white hover:text-black transition">
+                        Become a Provider
+                      </button>
                     </Link>
                   </div>
                 </div>

@@ -11,7 +11,7 @@ const CategorySections = async () => {
 
     if (error || !categories || categories.length === 0) {
         return (
-            <p className="text-center text-gray-500">
+            <p className="text-center text-muted-foreground">
                 No categories found.
             </p>
         );
@@ -33,15 +33,13 @@ const CategorySections = async () => {
                     <Link
                         key={category.id}
                         href={`/meals?category=${category.slug}`}
-                        className="group flex flex-col items-center p-4 bg-white rounded-xl shadow hover:shadow-lg transition"
+                        className="group flex flex-col items-center p-4 bg-card rounded-xl shadow hover:shadow-lg transition border border-border"
                     >
-
-                        <div className="w-20 h-20 sm:w-24 sm:h-24 mb-3 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-lg sm:text-xl">
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 mb-3 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-bold text-lg sm:text-xl">
                             <Utensils />
                         </div>
 
-
-                        <span className="text-sm sm:text-base font-medium text-center group-hover:text-primary transition">
+                        <span className="text-sm sm:text-base font-medium text-center text-foreground group-hover:text-primary transition">
                             {category.name}
                         </span>
                     </Link>

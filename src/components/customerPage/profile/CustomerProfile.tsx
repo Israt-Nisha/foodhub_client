@@ -102,7 +102,7 @@ export default function CustomerProfilePage({ userId }: Props) {
             </h1>
 
             {!editing ? (
-                <div className="bg-white border rounded-lg items-center shadow-md p-6 flex flex-col gap-4">
+                <div className="bg-card border rounded-lg items-center shadow-md p-6 flex flex-col gap-4">
                     <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-gray-200 shadow-sm">
                         {user?.image ? (
                             <img
@@ -112,15 +112,19 @@ export default function CustomerProfilePage({ userId }: Props) {
                             />
                         ) : (
                             <span className="flex items-center justify-center h-full text-gray-400">
-                                <User/>
+                                <User />
                             </span>
                         )}
                     </div>
 
-                    <p className="text-xl font-semibold">{user?.name}</p>
-                    <p className="text-sm text-gray-600">Email: {user?.email}</p>
-                    <p className="text-sm text-gray-600">Role: {user?.role}</p>
-                    <p className="text-sm text-gray-600">Status: {user?.status}</p>
+                    <p className="text-xl text-muted-foreground
+                line-clamp-2 font-semibold">{user?.name}</p>
+                    <p className="text-sm text-muted-foreground
+                line-clamp-2 text-gray-600">Email: {user?.email}</p>
+                    <p className="text-sm text-muted-foreground
+                line-clamp-2 text-gray-600">Role: {user?.role}</p>
+                    <p className="text-sm text-muted-foreground
+                line-clamp-2 text-gray-600">Status: {user?.status}</p>
 
                     <Button
                         className="mt-4 w-full"
@@ -131,7 +135,7 @@ export default function CustomerProfilePage({ userId }: Props) {
                 </div>
             ) : (
                 <form
-                    className="bg-white border rounded-lg shadow-md p-6 space-y-4"
+                    className="bg-card border rounded-lg shadow-md p-6 space-y-4"
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="flex flex-col items-center gap-4">
