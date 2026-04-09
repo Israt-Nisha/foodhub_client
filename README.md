@@ -54,6 +54,11 @@ This repository contains the frontend application built with Next.js and TypeScr
 - View all orders  
 - Manage food categories  
 
+
+### 🛡️ AI Features
+- ChatBot  
+- AI-assisted dashboards  
+
 ---
 
 ## ⚙️ Environment Variables (Frontend)
@@ -66,6 +71,7 @@ NEXT_PUBLIC_FRONTEND_URL=https://example-frontend.vercel.app
 NEXT_PUBLIC_AUTH_URL=https://example-backend.vercel.app/api/auth
 AUTH_URL=https://example-backend.vercel.app/api/auth
 NEXT_PUBLIC_IMGBB_API_KEY=your_imgbb_api_key_here
+OPENROUTER_API_KEY=your_open_api_key_here
 
 
 
