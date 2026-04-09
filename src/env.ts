@@ -6,6 +6,7 @@ export const env = createEnv({
     FRONTEND_URL: z.string().url(),
     AUTH_URL: z.string().url(),
     BACKEND_URL: z.string().url(),
+    OPENROUTER_API_KEY: z.string().min(1),
   },
 
   client: {
@@ -18,6 +19,7 @@ export const env = createEnv({
     FRONTEND_URL: process.env.FRONTEND_URL,
     AUTH_URL: process.env.AUTH_URL,
     BACKEND_URL: process.env.BACKEND_URL,
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
 
     NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,

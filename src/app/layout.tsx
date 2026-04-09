@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import Chatbot from "@/components/modules/chat";
 
 
 
@@ -40,6 +41,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
+          <Chatbot />
         </ThemeProvider>
       </body>
     </html>
