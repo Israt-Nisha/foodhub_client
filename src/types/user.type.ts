@@ -1,4 +1,16 @@
 export type UserStatus = "ACTIVE" | "SUSPENDED";
+export enum UserRole {
+  CUSTOMER = "CUSTOMER",
+  PROVIDER = "PROVIDER",
+  ADMIN = "ADMIN",
+  MANAGER = "MANAGER",
+  VENDOR = "VENDOR",
+}
+
+export interface UserStatusRole {
+  status: UserStatus;
+  role: UserRole;
+}
 
 export interface User {
   id: string;
@@ -8,7 +20,7 @@ export interface User {
   emailVerified: boolean;
   name: string;
   image?: string | null;
-  role: "CUSTOMER" | "PROVIDER" | "ADMIN";
+  role: "CUSTOMER" | "PROVIDER" | "ADMIN" | "MANAGER" | "VENDOR";
   status: UserStatus;
 }
 

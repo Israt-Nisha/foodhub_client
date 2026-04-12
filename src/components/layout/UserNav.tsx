@@ -44,9 +44,14 @@ export function UserNav({ user }: UserNavProps) {
   const getDashboardPath = () => {
     switch (user.role) {
       case "ADMIN":
-        return "/dashboard-admin";
+        return "/dashboard-admin/profile";
       case "PROVIDER":
-        return "/dashboard-provider";
+        return "/dashboard-provider/myprofile";
+      case "MANAGER":
+        return "/dashboard-manager/profile";
+      case "VENDOR":
+        return "/dashboard-vendor/profile";
+      case "CUSTOMER":
       default:
         return "/dashboard-customer";
     }

@@ -29,7 +29,7 @@ type Role = "customer" | "provider" | "admin";
 
 const roles: { value: Role; label: string; icon: React.ReactNode }[] = [
   { value: "customer", label: "I'm a Customer", icon: <User className="h-6 w-6" /> },
-  { value: "provider", label: "I'm a Provider Or Admin", icon: <Briefcase className="h-6 w-6" /> },
+  { value: "provider", label: "Others", icon: <Briefcase className="h-6 w-6" /> },
 
 ];
 

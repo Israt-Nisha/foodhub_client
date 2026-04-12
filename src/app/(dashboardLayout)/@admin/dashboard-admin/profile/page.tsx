@@ -1,7 +1,7 @@
 import ProfileRouter from "@/components/profiles/ProfileRouter";
 
-const CustomerProfile = async () => {
+const AdminProfile = async () => {
     return <ProfileRouter />;
 };
 
-export default CustomerProfile;
+export default AdminProfile;

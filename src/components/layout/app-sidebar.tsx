@@ -19,6 +19,8 @@ import { Roles } from "@/constants/roles";
 import { adminRoutes } from "@/routers/adminRoutes";
 import { customerRoutes } from "@/routers/customerRoutes";
 import { providerRoutes } from "@/routers/providerRoutes";
+import { managerRoutes } from "@/routers/managerRoutes";
+import { vendorRoutes } from "@/routers/vendorRoutes";
 
 export function AppSidebar({
    user,
@@ -38,6 +40,12 @@ let routes : Route[] = [];
       break;
     case Roles.provider:
       routes = providerRoutes;
+      break;
+    case Roles.manager:
+      routes = managerRoutes;
+      break;
+    case Roles.vendor:
+      routes = vendorRoutes;
       break;
     default:
       routes = [];

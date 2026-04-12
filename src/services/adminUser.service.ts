@@ -1,10 +1,10 @@
-import { UserData, UserStatus } from "@/types";
+import { UserData, UserStatus, UserStatusRole } from "@/types";
 
 const BACKEND_URL = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_BACKEND_URL;
 
 
 export const adminService = {
-  
+
   getStats: async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/stats`, {
@@ -50,9 +50,9 @@ export const adminService = {
       return data.success
         ? { data: data.data, error: null }
         : {
-            data: null,
-            error: { message: data.message || "Failed to fetch users" },
-          };
+          data: null,
+          error: { message: data.message || "Failed to fetch users" },
+        };
     } catch (err: any) {
       return {
         data: null,
@@ -70,9 +70,9 @@ export const adminService = {
       return data.success
         ? { data: data.data as UserData, error: null }
         : {
-            data: null,
-            error: { message: data.message || "Failed to fetch user" },
-          };
+          data: null,
+          error: { message: data.message || "Failed to fetch user" },
+        };
     } catch (err: any) {
       return {
         data: null,
@@ -81,21 +81,21 @@ export const adminService = {
     }
   },
 
-  updateUserStatus: async (id: string, status:UserStatus) => {
+  updateUserStatus: async (id: string, payload: Partial<UserStatusRole>) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/users/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({status}),
+        body: JSON.stringify(payload),
         credentials: "include",
       });
       const data = await res.json();
       return data.success
         ? { data: data.data, error: null }
         : {
-            data: null,
-            error: { message: data.message || "Failed to update user" },
-          };
+          data: null,
+          error: { message: data.message || "Failed to update user" },
+        };
     } catch (err: any) {
       return {
         data: null,
@@ -104,7 +104,7 @@ export const adminService = {
     }
   },
 
-   updateUser: async (id: string, payload: Partial<UserData>) => {
+  updateUser: async (id: string, payload: Partial<UserData>) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/users/${id}`, {
         method: "PATCH",
@@ -116,9 +116,9 @@ export const adminService = {
       return data.success
         ? { data: data.data as UserData, error: null }
         : {
-            data: null,
-            error: { message: data.message || "Failed to update user" },
-          };
+          data: null,
+          error: { message: data.message || "Failed to update user" },
+        };
     } catch (err: any) {
       return {
         data: null,
@@ -137,9 +137,9 @@ export const adminService = {
       return data.success
         ? { data: true, error: null }
         : {
-            data: null,
-            error: { message: data.message || "Failed to delete user" },
-          };
+          data: null,
+          error: { message: data.message || "Failed to delete user" },
+        };
     } catch (err: any) {
       return {
         data: null,

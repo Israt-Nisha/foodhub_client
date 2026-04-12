@@ -118,7 +118,11 @@ export const Navbar = () => {
           ? "/dashboard-admin"
           : userInfo.role === "PROVIDER"
             ? "/dashboard-provider"
-            : "/dashboard-customer",
+            : userInfo.role === "MANAGER"
+              ? "/dashboard-manager"
+              : userInfo.role === "VENDOR"
+                ? "/dashboard-vendor"
+                : "/dashboard-customer",
     }
     : null;
 

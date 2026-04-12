@@ -17,11 +17,15 @@ export default async function DashboardLayout({
   admin,
   customer,
   provider,
+  manager,
+  vendor,
 
 }: {
   admin: ReactNode;
   customer: ReactNode;
   provider: ReactNode;
+  manager: ReactNode;
+  vendor: ReactNode;
 }) {
 
   const { data } = await userService.getSession();
@@ -34,10 +38,13 @@ export default async function DashboardLayout({
         return admin;
       case Roles.provider:
         return provider;
+      case Roles.manager:
+        return manager;
+      case Roles.vendor:
+        return vendor;
       case Roles.customer:
-        return customer;
       default:
-        return null;
+        return customer;
     }
   };
 

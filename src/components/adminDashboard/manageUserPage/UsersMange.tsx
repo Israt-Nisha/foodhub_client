@@ -14,6 +14,7 @@ const ManageUsers = () => {
     const [saving, setSaving] = useState(false);
     const [editingUserId, setEditingUserId] = useState<string | null>(null);
     const [status, setStatus] = useState<UserStatus>("ACTIVE");
+    const [role, setRole] = useState<string>("CUSTOMER");
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -79,22 +80,49 @@ const ManageUsers = () => {
                             <p className="text-md font-bold">Role: {user.role}</p>
 
                             {editingUserId === user.id ? (
-                                <select
-                                    value={status}
-                                    onChange={(e) => setStatus(e.target.value as UserStatus)}
-                                    className="border rounded px-2 py-1 text-sm"
-                                >
-                                    <option value="ACTIVE">ACTIVE</option>
-                                    <option value="SUSPENDED">SUSPENDED</option>
-                                </select>
+                                <div className="space-y-2">
+                                    <div>
+                                        <label className="text-sm font-semibold">Status:</label>
+                                        <select
+                                            value={status}
+                                            onChange={(e) => setStatus(e.target.value as UserStatus)}
+                                            className="border rounded px-3 py-2 text-sm w-full bg-background text-foreground dark:bg-slate-950 dark:text-slate-50 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                                        >
+                                            <option value="ACTIVE" className="bg-background dark:bg-slate-900">ACTIVE</option>
+                                            <option value="SUSPENDED" className="bg-background dark:bg-slate-900">SUSPENDED</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-semibold">Role:</label>
+                                        <select
+                                            value={role}
+                                            onChange={(e) => setRole(e.target.value)}
+                                            className="border rounded px-3 py-2 text-sm w-full bg-background text-foreground dark:bg-slate-950 dark:text-slate-50 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                                        >
+                                            <option value="CUSTOMER" className="bg-background dark:bg-slate-900">CUSTOMER</option>
+                                            <option value="PROVIDER" className="bg-background dark:bg-slate-900">PROVIDER</option>
+                                            <option value="ADMIN" className="bg-background dark:bg-slate-900">ADMIN</option>
+                                            <option value="MANAGER" className="bg-background dark:bg-slate-900">MANAGER</option>
+                                            <option value="VENDOR" className="bg-background dark:bg-slate-900">VENDOR</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                             ) : (
-                                <p className="text-sm">
-                                    Status:
-                                    <span className="ml-1 font-semibold">
-                                        {user.status}
-                                    </span>
-                                </p>
+                                <div className="space-y-1">
+                                    <p className="text-sm">
+                                        Status:
+                                        <span className="ml-1 font-semibold">
+                                            {user.status}
+                                        </span>
+                                    </p>
+                                    <p className="text-sm">
+                                        Role:
+                                        <span className="ml-1 font-semibold">
+                                            {user.role}
+                                        </span>
+                                    </p>
+                                </div>
                             )}
 
                             <div className="flex gap-2">
@@ -108,7 +136,10 @@ const ManageUsers = () => {
                                                     if (!user.id) return;
 
                                                     setSaving(true);
-                                                    const res = await adminService.updateUserStatus(user.id, status);
+                                                    const res = await adminService.updateUser(user.id, {
+                                                        status,
+                                                        role,
+                                                    });
                                                     setSaving(false);
 
                                                     if (res.error) {
@@ -116,7 +147,7 @@ const ManageUsers = () => {
                                                         return;
                                                     }
 
-                                                    toast.success("User status updated");
+                                                    toast.success("User updated successfully");
                                                     setEditingUserId(null);
                                                     fetchUsers();
                                                 }}
@@ -139,6 +170,7 @@ const ManageUsers = () => {
                                                 onClick={() => {
                                                     setEditingUserId(user.id);
                                                     setStatus(user.status);
+                                                    setRole(user.role || "CUSTOMER");
                                                 }}
                                             >
                                                 Edit

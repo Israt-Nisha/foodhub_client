@@ -22,28 +22,45 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard-provider", request.url));
       case Roles.customer:
         return NextResponse.redirect(new URL("/dashboard-customer", request.url));
+      case Roles.manager:
+        return NextResponse.redirect(new URL("/dashboard-manager", request.url));
+      case Roles.vendor:
+        return NextResponse.redirect(new URL("/dashboard-vendor", request.url));
       default:
         return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 
   if (user.role === Roles.admin) {
-    if (pathname.startsWith("/dashboard-provider") || pathname.startsWith("/dashboard-customer")) {
+    if (pathname.startsWith("/dashboard-provider") || pathname.startsWith("/dashboard-customer") || pathname.startsWith("/dashboard-manager") || pathname.startsWith("/dashboard-vendor")) {
       return NextResponse.redirect(new URL("/dashboard-admin", request.url));
     }
   }
 
   if (user.role === Roles.provider) {
-    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-customer")) {
+    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-customer") || pathname.startsWith("/dashboard-manager") || pathname.startsWith("/dashboard-vendor")) {
       return NextResponse.redirect(new URL("/dashboard-provider", request.url));
     }
   }
 
   if (user.role === Roles.customer) {
-    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-provider")) {
+    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-provider") || pathname.startsWith("/dashboard-manager") || pathname.startsWith("/dashboard-vendor")) {
       return NextResponse.redirect(new URL("/dashboard-customer", request.url));
     }
   }
+
+  if (user.role === Roles.manager) {
+    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-provider") || pathname.startsWith("/dashboard-customer") || pathname.startsWith("/dashboard-vendor")) {
+      return NextResponse.redirect(new URL("/dashboard-manager", request.url));
+    }
+  }
+
+  if (user.role === Roles.vendor) {
+    if (pathname.startsWith("/dashboard-admin") || pathname.startsWith("/dashboard-provider") || pathname.startsWith("/dashboard-customer") || pathname.startsWith("/dashboard-manager")) {
+      return NextResponse.redirect(new URL("/dashboard-vendor", request.url));
+    }
+  }
+
 
   return NextResponse.next();
 }
@@ -59,5 +76,9 @@ export const config = {
     "/dashboard-provider/:path*",
     "/dashboard-customer",
     "/dashboard-customer/:path*",
+    "/dashboard-manager",
+    "/dashboard-manager/:path*",
+    "/dashboard-vendor",
+    "/dashboard-vendor/:path*",
   ],
 };
