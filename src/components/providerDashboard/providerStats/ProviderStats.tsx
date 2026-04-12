@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { providerService } from "@/services/provider.service";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -30,22 +31,61 @@ export default function ProviderDashboardClient() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    providerService.getProviderStats().then((res) => {
-      if (res.error) {
-        setError(res.error.message);
-      } else {
+    const fetchStats = async () => {
+      try {
+        const res = await providerService.getProviderStats();
+
+        if (res.error) {
+          setError(res.error.message);
+          return;
+        }
+
         // Robust data extraction: walk through .data properties to find the flat stats object
         let extractedData = res.data;
         while (extractedData && extractedData.data && typeof extractedData.data === "object" && !Array.isArray(extractedData.data)) {
           extractedData = extractedData.data;
         }
+
+        if (!extractedData) {
+          setError("Provider stats were not returned by the API.");
+          return;
+        }
+
         setStats(extractedData);
+      } catch (err: any) {
+        setError(err?.message || "Something went wrong while loading provider stats.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
+
+    fetchStats();
   }, []);
 
-  if (loading) return <p className="p-10 text-center">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="max-w-7xl p-4 md:p-8 space-y-8">
+        <Skeleton className="h-32 rounded-3xl" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-lg" />
+          ))}
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-lg" />
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Skeleton className="h-80 rounded-3xl" />
+          <Skeleton className="h-80 rounded-3xl" />
+        </div>
+      </div>
+    );
+  }
   if (error) return <p className="p-10 text-center text-red-500">{error}</p>;
   if (!stats) return <p className="p-10 text-center">No stats found. Please create your provider profile first.</p>;
 

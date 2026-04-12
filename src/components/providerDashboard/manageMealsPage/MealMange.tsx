@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MealData } from "@/types";
 import MealForm from "./MealForm";
 import { mealService } from "@/services/meal.service";
@@ -93,7 +93,11 @@ const MealsManage = ({ providerId }: Props) => {
 
             {/* Meal list */}
             {loading ? (
-                <p>Loading meals...</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <Skeleton key={i} className="h-48 rounded-xl" />
+                    ))}
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {meals.map((meal) => (

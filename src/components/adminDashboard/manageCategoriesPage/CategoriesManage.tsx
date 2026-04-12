@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CategoryData, CategoryWithCount } from "@/services/category.service";
 import { categoryService } from "@/services/category.service";
 import CategoryForm from "./CatForm";
@@ -86,7 +86,11 @@ const CategoriesManage = () => {
 
       {/* Category list */}
       {loading ? (
-        <p>Loading categories...</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 rounded-xl" />
+          ))}
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {categories.map((category) => (

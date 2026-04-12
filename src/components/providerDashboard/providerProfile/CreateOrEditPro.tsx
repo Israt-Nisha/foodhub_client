@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProviderProfileData } from "@/types";
 import { providerService } from "@/services/provider.service";
 import ProviderForm from "./ProviderForm";
@@ -70,7 +71,16 @@ const ProviderProfileManage = ({ userId }: Props) => {
 
             {/* Profile display */}
             {loading ? (
-                <p>Loading profile...</p>
+                <div className="border mb-6 rounded-xl p-4 space-y-2 max-w-sm">
+                    <Skeleton className="h-6 w-3/4 rounded-md" />
+                    <Skeleton className="h-4 w-full rounded-md" />
+                    <Skeleton className="h-4 w-2/3 rounded-md" />
+                    <Skeleton className="w-20 h-20 rounded-md" />
+                    <div className="flex justify-end gap-2 pt-2">
+                        <Skeleton className="h-8 w-16 rounded-md" />
+                        <Skeleton className="h-8 w-20 rounded-md" />
+                    </div>
+                </div>
             ) : provider ? (
                 <div className="border mb-6 rounded-xl p-4 space-y-2 max-w-sm">
                     <h3 className="font-bold text-lg">

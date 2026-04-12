@@ -4,6 +4,7 @@ import { MealData, User } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cartService } from "@/services/cart.service";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
@@ -12,9 +13,10 @@ import { useRouter } from "next/navigation";
 
 type MealsGridProps = {
   meals: MealData[];
+  isLoading?: boolean;
 };
 
-const MealsGrid = ({ meals }: MealsGridProps) => {
+const MealsGrid = ({ meals, isLoading = false }: MealsGridProps) => {
   const { data: session } = authClient.useSession();
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -51,6 +53,22 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div key={index} className="bg-card border border-border rounded-xl p-4 flex flex-col">
+            <Skeleton className="w-full h-40 mb-3 rounded-md" />
+            <Skeleton className="w-3/4 h-6 mb-2" />
+            <Skeleton className="w-full h-4 mb-2" />
+            <Skeleton className="w-1/2 h-5 mb-4" />
+            <Skeleton className="w-full h-10 mt-auto" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (!meals || meals.length === 0) {
     return <p className="text-center text-muted-foreground
                 line-clamp-2 py-10">Meals not found</p>;
@@ -75,14 +93,18 @@ const MealsGrid = ({ meals }: MealsGridProps) => {
               </div>
             )}
 
-            <h3 className="text-lg font-semibold">{meal.name}</h3>
+            <h3 className="text-lg font-semibold line-clamp-1">{meal.name}</h3>
             <p className="text-sm text-muted-foreground
-                line-clamp-2">{meal.category?.name}</p>
+                line-clamp-1">{meal.category?.name}</p>
+            <p className="text-xs text-muted-foreground
+                line-clamp-2 mt-1 flex-1">
+              {meal.description}
+            </p>
             <p className="mt-2 font-bold text-primary">
               Price: {meal.price} TK
             </p>
             <p className="text-xs text-muted-foreground
-                line-clamp-2 mt-1">
+                line-clamp-1 mt-1">
               {meal.provider?.restaurantName}
             </p>
           </Link>

@@ -12,8 +12,25 @@ export const adminService = {
         credentials: "include",
       });
       const data = await res.json();
-      
-      return { data, error: null };
+
+      if (data && typeof data === "object") {
+        if ("success" in data) {
+          if (data.success) {
+            return { data: data.data, error: null };
+          }
+          return {
+            data: null,
+            error: { message: data.message || "Failed to fetch admin stats" },
+          };
+        }
+
+        return { data, error: null };
+      }
+
+      return {
+        data: null,
+        error: { message: "Unexpected admin stats response format" },
+      };
     } catch (err: any) {
       return {
         data: null,

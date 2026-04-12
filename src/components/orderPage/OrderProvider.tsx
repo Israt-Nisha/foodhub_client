@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { orderService } from "@/services/order.service";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";import { Skeleton } from "@/components/ui/skeleton";import { toast } from "sonner";
 
 
 export default function ProviderOrdersPage() {
@@ -41,7 +40,16 @@ export default function ProviderOrdersPage() {
         }
     };
 
-    if (loading) return <p className="text-center py-10">Loading orders...</p>;
+    if (loading) {
+        return (
+            <div className="container mx-auto px-4 py-10 max-w-6xl space-y-4">
+                <Skeleton className="h-8 w-40 rounded-md" />
+                {Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-32 rounded-lg" />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 py-10 max-w-6xl">

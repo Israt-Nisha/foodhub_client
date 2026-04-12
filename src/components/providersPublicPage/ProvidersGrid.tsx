@@ -2,16 +2,55 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChefHat } from "lucide-react";
+import { ChefHat, ArrowRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 type Provider = {
   id: string;
   restaurantName: string;
   logo?: string | null;
   address?: string;
+  description?: string;
 };
 
-const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
+const ProvidersGrid = ({ providers, isLoading = false }: { providers: Provider[]; isLoading?: boolean }) => {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div
+            key={index}
+            className="bg-card rounded-2xl border border-border p-4 sm:p-5 space-y-4"
+          >
+            {/* Logo skeleton */}
+            <div className="flex justify-center">
+              <Skeleton className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full" />
+            </div>
+
+            {/* Title skeleton */}
+            <Skeleton className="h-5 w-3/4 mx-auto rounded-md" />
+
+            {/* Address skeleton */}
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-full rounded-md" />
+              <Skeleton className="h-3 w-5/6 mx-auto rounded-md" />
+            </div>
+
+            {/* Description skeleton */}
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-full rounded-md" />
+              <Skeleton className="h-3 w-4/5 mx-auto rounded-md" />
+            </div>
+
+            {/* Button skeleton */}
+            <Skeleton className="h-9 w-full rounded-md" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (!providers?.length) {
     return (
       <p className="text-center text-muted-foreground py-10">
@@ -23,12 +62,12 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
       {providers.map((provider) => (
-        <Link
+        <div
           key={provider.id}
-          href={`/providers/${provider.id}`}
           className="group bg-card rounded-2xl border border-border p-4 sm:p-5
                      transition-all duration-300
-                     hover:shadow-xl hover:-translate-y-1"
+                     hover:shadow-xl hover:border-primary/50
+                     flex flex-col"
         >
           {/* LOGO */}
           <div className="flex justify-center mb-4">
@@ -60,7 +99,7 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
           </div>
 
           {/* INFO */}
-          <div className="text-center space-y-1">
+          <div className="text-center space-y-2 flex-1">
             <h2 className="
               text-base sm:text-lg font-semibold text-foreground
               line-clamp-1
@@ -77,8 +116,25 @@ const ProvidersGrid = ({ providers }: { providers: Provider[] }) => {
                 {provider.address}
               </p>
             )}
+
+            {provider.description && (
+              <p className="
+                text-xs text-muted-foreground
+                line-clamp-2
+              ">
+                {provider.description}
+              </p>
+            )}
           </div>
-        </Link>
+
+          {/* ACTION BUTTON */}
+          <Link href={`/providers/${provider.id}`} className="mt-4">
+            <Button variant="outline" size="sm" className="w-full gap-2">
+              View Details
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
       ))}
     </div>
   );

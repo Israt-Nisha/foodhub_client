@@ -128,8 +128,10 @@ const MealFilterPage = ({ initialMeals }: MealFilterPageProps) => {
                 </div>
             </div>
 
-            {loading ? (
-                <p className="text-center py-10 text-gray-500">Loading meals...</p>
+            {loading || !meals.length ? (
+                <>
+                    <MealsGrid meals={meals} isLoading={loading} />
+                </>
             ) : (
                 <>
                     <MealsGrid meals={meals} />

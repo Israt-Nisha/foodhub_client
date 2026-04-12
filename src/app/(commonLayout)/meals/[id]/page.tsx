@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { mealService } from "@/services/meal.service";
 import { ChefHat, Tag, Coffee, PieChart, Calendar } from "lucide-react";
 import Rating from "@/components/meals/MealReview";
+import { AddToCartButton } from "@/components/meals/AddToCartButton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 const MealDetailsPage = async ({
@@ -137,6 +139,10 @@ const MealDetailsPage = async ({
                         <p className="text-gray-600">
                             Delivery: <span className="font-semibold">Cash on delivery available</span>
                         </p>
+
+                        <div className="mt-6">
+                            <AddToCartButton mealId={meal.id} mealName={meal.name} />
+                        </div>
                     </div>
 
                 )}

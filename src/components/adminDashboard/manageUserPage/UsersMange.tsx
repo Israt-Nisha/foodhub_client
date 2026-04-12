@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserData, UserStatus } from "@/types";
 import { adminService } from "@/services/adminUser.service";
 
@@ -60,7 +60,11 @@ const ManageUsers = () => {
         <>
          
             {loading ? (
-                <p>Loading users...</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <Skeleton key={i} className="h-48 rounded-xl" />
+                    ))}
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {users.map((user) => (

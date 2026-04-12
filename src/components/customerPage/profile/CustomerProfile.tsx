@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { adminService } from "@/services/adminUser.service";
 import { UserData } from "@/types";
 import { User } from "lucide-react";
@@ -98,7 +98,23 @@ export default function CustomerProfilePage({ userId }: Props) {
         }
     };
 
-    if (loading) return <p className="text-center py-10">Loading profile...</p>;
+    if (loading) {
+        return (
+            <div className="container px-4 py-8 max-w-md mx-auto">
+                <Skeleton className="h-10 w-full mb-8 rounded-md" />
+                <div className="bg-card border border-border rounded-3xl p-8 flex flex-col gap-6">
+                    <Skeleton className="w-32 h-32 rounded-full mx-auto" />
+                    <Skeleton className="h-8 w-3/4 mx-auto rounded-md" />
+                    <Skeleton className="h-4 w-1/2 mx-auto rounded-md" />
+                    <div className="space-y-3 py-4">
+                        <Skeleton className="h-4 w-full rounded-md" />
+                        <Skeleton className="h-4 w-full rounded-md" />
+                    </div>
+                    <Skeleton className="h-10 w-full rounded-md" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="container px-4 py-8 max-w-md mx-auto">

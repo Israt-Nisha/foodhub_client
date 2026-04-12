@@ -125,7 +125,7 @@ export const Navbar = () => {
   const navItems: NavItem[] = dashboardLink ? [...baseNavItems, dashboardLink] : baseNavItems;
 
   return (
-    <section className={cn("py-4")}>
+    <section className={cn("py-4 sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border")}>
       <div className="container mx-auto px-4">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { OrderData, orderService } from "@/services/order.service";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { ReviewData, reviewService } from "@/services/review.service";
 import {
@@ -95,7 +96,16 @@ export default function CustomerOrdersPage() {
 
 
 
-    if (loading) return <p className="text-center py-10">Loading orders...</p>;
+    if (loading) {
+        return (
+            <div className="container mx-auto px-4 py-10 max-w-5xl space-y-4">
+                <Skeleton className="h-8 w-40 rounded-md" />
+                {Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-32 rounded-lg" />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 py-10 max-w-5xl">

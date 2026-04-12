@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { adminService } from "@/services/adminUser.service";
 import AIInsights from "./AIInsights";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, Legend
@@ -52,7 +53,68 @@ export default function AdminDashboardClient() {
     fetchStats();
   }, []);
 
-  if (loading) return <div className="p-10 text-center text-gray-700">Loading stats...</div>;
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        <Skeleton className="h-9 w-48 rounded-md" />
+        
+        {/* Users Overview Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))}
+          </div>
+        </div>
+
+        {/* Content Overview Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))}
+          </div>
+        </div>
+
+        {/* Orders Overview Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))}
+          </div>
+        </div>
+
+        {/* Revenue Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <Skeleton className="h-24 rounded-xl" />
+        </div>
+
+        {/* Charts Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-40 rounded-md" />
+            <Skeleton className="h-[350px] rounded-3xl" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-48 rounded-md" />
+            <Skeleton className="h-[350px] rounded-3xl" />
+          </div>
+        </div>
+
+        {/* AI Insights Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-md" />
+          <Skeleton className="h-32 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+  
   if (error) return <div className="p-10 text-center text-red-500">{error}</div>;
   if (!stats) return <div className="p-10 text-center text-gray-500">No stats available</div>;
 
