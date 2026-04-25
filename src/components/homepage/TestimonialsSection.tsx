@@ -60,15 +60,8 @@ export const TestimonialsSection = async () => {
                 </p>
 
                 <div className="flex items-center gap-4">
-                  <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-primary/20 bg-muted flex items-center justify-center">
-                    {/* Using dummy image as requested */}
-                    <Image
-                      src={`https://i.pravatar.cc/150?u=${review.id || index}`}
-                      alt={review.customer?.name || "Customer"}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                 
+                  <UserCircle className="h-12 w-12 text-muted-foreground mb-4" />
                   <div>
                     <h4 className="font-bold text-foreground">
                       {review.customer?.name || "Verified Customer"}

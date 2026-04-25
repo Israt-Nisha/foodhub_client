@@ -39,6 +39,7 @@ export const Navbar = () => {
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -85,6 +86,10 @@ export const Navbar = () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, [userInfo]);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
 
   const handleSignOut = async () => {
@@ -193,7 +198,7 @@ export const Navbar = () => {
               FoodHub
             </Link>
 
-            <Sheet>
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <div className="flex items-center gap-2">
                   <ThemeToggle />
                   <SheetTrigger asChild>

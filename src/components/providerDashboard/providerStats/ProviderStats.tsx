@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { providerService } from "@/services/provider.service";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend
@@ -87,7 +89,14 @@ export default function ProviderDashboardClient() {
     );
   }
   if (error) return <p className="p-10 text-center text-red-500">{error}</p>;
-  if (!stats) return <p className="p-10 text-center">No stats found. Please create your provider profile first.</p>;
+  if (!stats) return (
+    <div className="flex flex-col items-center justify-center p-10 space-y-4">
+      <p className="text-center font-medium">No stats found. Please create your provider profile first.</p>
+      <Link href="/dashboard-provider/profile">
+        <Button className="font-bold">Click Here</Button>
+      </Link>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl p-4 md:p-8 space-y-8">
